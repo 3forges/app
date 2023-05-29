@@ -20,12 +20,47 @@ The pesto API is the backend of Pesto : It consists in a REST API.
 ```bash
 # npm remove -g @loopback/cli
 npm i -g @loopback/cli
+
+# ---
+# export DESIRED_NODEJS_VERSION=${DESIRED_NODEJS_VERSION:-"18.16.0"}
+# export TARGET_OS_DISTRO="linux-x64"
+export DESIRED_NODEJS_VERSION=${DESIRED_NODEJS_VERSION:-"18.16.0"}
+export TARGET_OS_DISTRO="linux-x64"
+sudo ln -s /usr/local/lib/nodejs/node-v${DESIRED_NODEJS_VERSION}-${TARGET_OS_DISTRO}/lib/node_modules/@loopback/cli/bin/cli-main.js /usr/local/bin/lb4
+
 ```
 * then create a loopback project : 
 
 ```bash
 lb4 app pesto
+cd pesto/
+npm start
 ```
+* and from any other shell : 
+
+```bash
+curl -i http://app.pesto.io:3000/ping | tail -n 1 | jq .
+```
+* Your should get smthg like : 
+```bash
+$ curl -i http://app.pesto.io:3000/ping | tail -n 1 | jq .
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   163  100   163    0     0    516      0 --:--:-- --:--:-- --:--:--   517
+{
+  "greeting": "Hello from LoopBack",
+  "date": "2023-05-29T22:44:29.488Z",
+  "url": "/ping",
+  "headers": {
+    "host": "app.pesto.io:3000",
+    "user-agent": "curl/7.77.0",
+    "accept": "*/*"
+  }
+}
+
+```
+
+
 
 ## ROADMAP
 
