@@ -29,14 +29,11 @@ export TARGET_OS_DISTRO="linux-x64"
 sudo ln -s /usr/local/lib/nodejs/node-v${DESIRED_NODEJS_VERSION}-${TARGET_OS_DISTRO}/lib/node_modules/@loopback/cli/bin/cli-main.js /usr/local/bin/lb4
 
 ```
-* then clone the project and start the backend : 
+* then create a loopback project : 
 
 ```bash
-# I created the loopback 4 App with : lb4 app pesto
-git clone git@github.com:3forges/app.git ./where_i_work/
-cd ./where_i_work/backend 
+lb4 app pesto
 cd pesto/
-npm i
 npm start
 ```
 * and from any other shell : 
@@ -64,31 +61,6 @@ $ curl -i http://app.pesto.io:3000/ping | tail -n 1 | jq .
 ```
 
 * you can also browse http://app.pesto.io:3000/explorer/
-
-* Then I added a new DataSource : 
-
-```bash
-mkdir data
-touch data/content_types/ds.json
-
-cat <<EOF >./data/content_types/ds.json
-{
-  "ids": {
-    "ContentType": 3
-  },
-  "models": {
-    "ContentType": {
-      "1": "{\"title\":\"Things I need to buy\",\"content\":\"milk, cereal, and waffles\",\"id\":1}",
-      "2": "{\"title\":\"Great frameworks\",\"content\":\"LoopBack is a great framework\",\"id\":2}"
-    }
-  }
-}
-EOF
-lb4 datasource ds
-
-
-```
-
 
 
 ## ROADMAP
@@ -150,4 +122,6 @@ sed -i "s#${OLD_IP_TO_REPLACE}#${PESTO_API_HOST_IP}#g" /c/Windows/System32/drive
 
 ## ANNEX: References
 
-* Loopback 4 : https://loopback.io/doc/en/lb4/
+* Loopback 4 : 
+  * Getting Started : https://loopback.io/doc/en/lb4/
+  * I then followed [this tutorial from official docs]https://loopback.io/doc/en/lb4/express-with-lb4-rest-tutorial.html
