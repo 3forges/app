@@ -15,8 +15,48 @@ The pesto API is the backend of Pesto : It consists in a REST API.
 
 ### Stack setup
 
+* Install the Loopback CLI : 
+
+```bash
+# npm remove -g @loopback/cli
+npm i -g @loopback/cli
+```
+* then create a loopback project : 
+
+```bash
+lb4 app pesto
+```
 
 ## ROADMAP
+
+* blunt rest endpoints : 
+  * List all content types (from the `pesto.yaml` config file), for a given git repository, `GET /api/:org_group_or_user/:repo_name/content/types`, the JSON payload is : 
+
+```bash
+export PESTO_API_HOST="app.pesto.io"
+export PESTO_API_BASEURL="https://app.pesto.io/api"
+export GITHUB_REPO_ORG_OR_USER="3forges"
+export GITHUB_REPO_NAME="web"
+# could be github, gitlab, or gitea, more support coming up
+export GIT_SERVICE_ID="github"
+# export GIT_SERVICE_ID="gitlab"
+# export GIT_SERVICE_ID="gitea"
+
+curl -X GET ${PESTO_API_BASEURL}/content/${GITHUB_REPO_ORG_OR_USER}/${GITHUB_REPO_NAME}/types?pagination=3
+
+cat <<EOF >./get_content_types_json_payload.json
+{
+    "pagination": 3,
+}
+EOF
+curl -X GET \
+  -H "Content-type: application/json" \
+  -H "Accept: application/json" \
+  -d @./get_content_types_json_payload.json \
+  "${PESTO_API_BASEURL}/content/${GITHUB_REPO_ORG_OR_USER}/${GITHUB_REPO_NAME}/types?pagination=3"
+
+``` 
+
 
 * Having a REST API with only Github authentication, that has the following endpoints : 
   * API BASE URL : https://app.pesto.io/api/
@@ -28,6 +68,22 @@ The pesto API is the backend of Pesto : It consists in a REST API.
       * git push to the remote repository on github : on all branches, except the master git branch (the bot will create a pull request, which the user will approve from the Pesto Web UI) 
       * must 
   * 
+
+## ETC/HOSTS
+
+```bash
+export PESTO_API_HOST="app.pesto.io"
+export PESTO_API_HOST_IP="192.168.228.138"
+export OLD_IP_TO_REPLACE="192.168.172.138"
+
+echo "# --- " | tee -a /c/Windows/System32/drivers/etc/hosts
+echo "# - Pesto App Dev " | tee -a /c/Windows/System32/drivers/etc/hosts
+echo "${PESTO_API_HOST_IP}          app.pesto.io" | tee -a /c/Windows/System32/drivers/etc/hosts
+
+sed -i "s#${OLD_IP_TO_REPLACE}#${PESTO_API_HOST_IP}#g" /c/Windows/System32/drivers/etc/hosts
+
+```
+
 ## ANNEX: References
 
 * Loopback 4 : https://loopback.io/doc/en/lb4/
