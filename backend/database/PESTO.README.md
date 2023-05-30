@@ -26,7 +26,7 @@ docker-compose up -d --build
 ## Run the containers
 
 ```bash
-docker-compose up -d
+docker-compose up -d --force-recreate
 # --- # --- # --- # --- # --- # --- # --- # --- # --- #--- # 
 # - OrForce Rebuild the docker image, if you generated a new key
 # --- # --- # --- # --- # --- # --- # --- # --- # --- #--- # 
@@ -89,3 +89,12 @@ db.adminCommand( { shardCollection: "PestoDb.ContentTypes", key: { oemNumber: "h
 ```bash
 mongodb://your_admin:your_password@127.0.0.1:27117,127.0.0.1:27118/?authMechanism=DEFAULT
 ```
+
+## Restart all containers
+
+* Sometimes, restarting like this, works : 
+
+```bash
+docker-compose up -d --force-recreate
+```
+

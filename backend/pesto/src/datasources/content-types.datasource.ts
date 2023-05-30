@@ -6,12 +6,19 @@ const config = {
   name: 'ContentTypes',
   connector: 'mongodb',
   // url: 'mongodb://mongo1:30001,mongo2:30002,mongo3:30003/?replicaSet=my-replica-set',
-  url: `mongodb://your_admin:your_password@${process.env.PESTO_DB_HOST}:27117,${process.env.PESTO_DB_HOST}:27118/?authMechanism=DEFAULT`,
-  host: 'db.pesto.io',
-  // port: 30001,
+  /**
+   * Note: 
+   * 27117 and 27118 are the Mongo Routers for the Shard: that's why we only hit them, and they route properly the requests
+   * export MONGO_ROUTER01_PORT=27117
+   * export MONGO_ROUTER02_PORT=27118
+   */
+  url: `mongodb://your_admin:your_password@${process.env.PESTO_DB_HOST}:${process.env.MONGO_ROUTER01_PORT},${process.env.PESTO_DB_HOST}:${process.env.MONGO_ROUTER02_PORT}/?authMechanism=DEFAULT`,
+  host: `${process.env.PESTO_DB_HOST}`,
+  port: 30001,
   user: 'your_admin',
   password: 'your_password',
-  database: 'PestoDb',
+  // database: 'PestoDb',
+  database: `${process.env.PESTO_DB_NAME}`,
   useNewUrlParser: true
 };
 
@@ -29,6 +36,7 @@ export class ContentTypesDataSource extends juggler.DataSource
     @inject('datasources.config.content_types', {optional: true})
     dsConfig: object = config,
   ) {
+    console.log(`config.url = [${config.url}]`)
     super(dsConfig);
   }
 }

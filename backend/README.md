@@ -37,6 +37,16 @@ git clone git@github.com:3forges/app.git ./where_i_work/
 cd ./where_i_work/backend 
 cd pesto/
 npm i
+
+export PESTO_DB_HOST="db.pesto.io"
+export PESTO_DB_NAME="PestoDb"
+
+# Note: 
+# 27117 and 27118 are the Mongo Routers for the Shard: that's 
+# why we only hit them, and they route properly the requests
+export MONGO_ROUTER01_PORT=27117
+export MONGO_ROUTER02_PORT=27118
+
 npm start
 ```
 * and from any other shell : 
@@ -164,6 +174,7 @@ export OLD_IP_TO_REPLACE="192.168.172.138"
 echo "# --- " | tee -a /c/Windows/System32/drivers/etc/hosts
 echo "# - Pesto App Dev " | tee -a /c/Windows/System32/drivers/etc/hosts
 echo "${PESTO_API_HOST_IP}          app.pesto.io" | tee -a /c/Windows/System32/drivers/etc/hosts
+echo "${PESTO_API_HOST_IP}          db.pesto.io" | tee -a /c/Windows/System32/drivers/etc/hosts
 
 sed -i "s#${OLD_IP_TO_REPLACE}#${PESTO_API_HOST_IP}#g" /c/Windows/System32/drivers/etc/hosts
 
