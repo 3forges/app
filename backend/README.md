@@ -89,14 +89,29 @@ lb4 datasource ds
 
 ```
 
-
+* Note that I had to run `npm install loopback-connector-mongodb --save`, because the mongodb connector was required
 ## MongoDB DAtabase
 
 
 I use this : https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/Feature/Auth/with-keyfile-auth#but-before-you-start-inserting-data-you-should-verify-them-first
 
-It sets up mongo replicaset with mongo 6, and with authentication, they enven give the MongoDb connection string
- 
+It sets up mongo replicaset with mongo 6, and with authentication, they even give the MongoDb connection string (OK IT WORKSSS NOWWW)
+
+
+Ok so i have one entity, called "content-types": 
+* In MongoDB the collection (table) name is `ContentTypes`
+* there are also the loopback classes and module names
+* And with the source code here, plus the mongodb setup and running as instructed exactly in `backend/database/PESTO.README.md` , I successffully can query the entity like thissss : 
+
+```bash
+curl -iv -X GET "http://localhost:3000/content-types" -H 'Content-Type: application/json' -H 'Accept: application/json'| tail -n 1 | jq .
+```
+
+
+
+
+
+
 ## ROADMAP
 
 * blunt rest endpoints : 
