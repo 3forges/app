@@ -90,7 +90,13 @@ lb4 datasource ds
 ```
 
 
+## MongoDB DAtabase
 
+
+I use this : https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/Feature/Auth/with-keyfile-auth#but-before-you-start-inserting-data-you-should-verify-them-first
+
+It sets up mongo replicaset with mongo 6, and with authentication, they enven give the MongoDb connection string
+ 
 ## ROADMAP
 
 * blunt rest endpoints : 
