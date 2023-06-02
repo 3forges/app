@@ -10,7 +10,7 @@ echo "PESTO_LX_GID: ${PESTO_LX_GID}"
 # To create a non root group and user inside your Alpine based Dockerfile
 
 # -g is the GID
-addgroup -g 1000 ${PESTO_LX_USER_GRP}
+addgroup -g ${PESTO_LX_GID} ${PESTO_LX_USER_GRP}
 
 
 
