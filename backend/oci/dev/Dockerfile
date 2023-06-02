@@ -5,7 +5,7 @@ ARG PROD_OCI_IMG_TAG=${PESTO_NODE_VERSION}-alpine3.16
 FROM node:${PESTO_NODE_VERSION}-bullseye-slim AS build-deps
 RUN mkdir -p /build/
 # COPY package*.json /build/
-COPY pesto/package*.json /build/
+COPY backend/pesto/package*.json /build/
 WORKDIR /build
 RUN npm install
 
@@ -14,7 +14,7 @@ FROM node:${PESTO_NODE_VERSION}-bullseye-slim AS compile-env
 RUN mkdir /compile
 COPY --from=build-deps /build /compile
 WORKDIR /compile
-COPY pesto/ .
+COPY backend/pesto/ .
 # put your npm script to compile typescript
 RUN npm build
 
@@ -23,7 +23,7 @@ RUN npm build
 FROM node:${PESTO_NODE_VERSION}-bullseye-slim AS app-runtime-dependencies
 RUN mkdir -p /build/
 # COPY package*.json /build/
-COPY pesto/package*.json /build/
+COPY backend/pesto/package*.json /build/
 WORKDIR /build
 # RUN npm install --production
 # npm WARN config production Use `` instead.
@@ -39,7 +39,7 @@ COPY backend/oci/create-lx-user.alpine.sh .
 COPY ./.prod.env.sh .
 # For the moment, the linux user is created, but absolutely not used
 RUN chmod +x ./create-lx-user.alpine.sh && source ./.prod.env.sh && ./create-lx-user.alpine.sh
-RUN mkdir -p /pesto/app && mkdir -p /pesto/.secrets/ && chown node:node /pesto
+RUN mkdir -p /backend/pesto/app && mkdir -p /backend/pesto/.secrets/ && chown node:node /pesto
 
 # Final Stage for running application
 FROM runtime-linux AS runtime-env
@@ -49,7 +49,7 @@ COPY --from=compile-env --chown=node:node /compile/dist /pesto
 # copy production dependencies
 COPY --from=app-runtime-dependencies --chown=node:node /build /pesto
 # copy config/ folder if you are using node-config
-# COPY --chown=node:node config /pesto/config
+# COPY --chown=node:node config /backend/pesto/config
 USER node
 ARG PESTO_API_HTTPS_PORT=9043
 ENV PESTO_API_HTTPS_PORT=$PESTO_API_HTTPS_PORT
