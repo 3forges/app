@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "  PESTO_CI_DOCKER_AUTH_TOKEN=[={PESTO_CI_DOCKER_AUTH_TOKEN}]"
+
 cat <<EOF >./.pesto.ci.docker.config.json
 {
     "auths": {
