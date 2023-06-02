@@ -10,7 +10,7 @@ x-forges-common: &forges-common
     args:
       PESTO_LX_USER: pesto
       PESTO_LX_USER_GRP: pesto
-      PESTO_LX_PASSWORD: pesto
+      # PESTO_LX_PASSWORD: pesto
       PESTO_LX_UID: 1000
       PESTO_LX_GID: 1000
   # command: pnpm dev
@@ -23,7 +23,7 @@ x-forges-common: &forges-common
   environment:
     PESTO_LX_USER: pesto
     PESTO_LX_USER_GRP: pesto
-    PESTO_LX_PASSWORD: pesto
+    # PESTO_LX_PASSWORD: pesto
     PESTO_LX_UID: 1000
     PESTO_LX_GID: 1000
     PESTO_API_ROOT_USER: pesto
