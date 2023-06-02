@@ -23,7 +23,10 @@ RUN mkdir -p /build/
 # COPY package*.json /build/
 COPY pesto/package*.json /build/
 WORKDIR /build
-RUN npm install --production
+# RUN npm install --production
+# npm WARN config production Use `` instead.
+# npm WARN deprecated stable@0.1.8: Modern JS already guarantees Array#sort() is a stable sort, so this library is deprecated. See the compatibility table on MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#browser_compatibility
+RUN npm install --omit=dev
 
 
 ARG PROD_OCI_IMG_TAG="${PESTO_NODE_VERSION}-alpine3.16"
