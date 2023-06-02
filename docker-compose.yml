@@ -2,7 +2,7 @@ version: '3.7'
 
 # Settings and configurations that are common for all containers
 x-forges-common: &forges-common
-  image: troisforges.io/pesto/api:0.0.1-dev
+  image: troisforges.io/pesto-api:0.0.1-dev
   build:
     # context: ./backend/oci/dev
     context: .
