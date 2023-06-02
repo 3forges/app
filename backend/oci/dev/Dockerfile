@@ -39,15 +39,15 @@ COPY backend/oci/create-lx-user.alpine.sh .
 COPY ./.prod.env.sh .
 # For the moment, the linux user is created, but absolutely not used
 RUN chmod +x ./create-lx-user.alpine.sh && source ./.prod.env.sh && ./create-lx-user.alpine.sh
-RUN mkdir -p /backend/pesto/app && mkdir -p /backend/pesto/.secrets/ && chown node:node /pesto
+RUN mkdir -p /pesto/app && mkdir -p /pesto/.secrets/ && chown node:node /pesto
 
 # Final Stage for running application
 FROM runtime-linux AS runtime-env
 WORKDIR /pesto
 # copy compiled artifacts from compile-env
-COPY --from=compile-env --chown=node:node /compile/dist /pesto
+COPY --from=compile-env --chown=node:node /compile/dist /pesto/app
 # copy production dependencies
-COPY --from=app-runtime-dependencies --chown=node:node /build /pesto
+COPY --from=app-runtime-dependencies --chown=node:node /build /pesto/app
 # copy config/ folder if you are using node-config
 # COPY --chown=node:node config /backend/pesto/config
 USER node
