@@ -5,7 +5,7 @@ x-forges-common: &forges-common
   image: troisforges.io/pesto/api:0.0.1-dev
   build:
     # context: ./backend/oci/dev
-    context: ./
+    context: .
     dockerfile: oci/dev/Dockerfile
     args:
       PESTO_LX_USER: pesto
