@@ -1,4 +1,6 @@
 ARG PESTO_NODE_VERSION=20.2.0
+ARG PROD_OCI_IMG_TAG=${PESTO_NODE_VERSION}-alpine3.16
+
 # 1st Stage for installing dependencies
 FROM node:${PESTO_NODE_VERSION}-bullseye-slim AS build-deps
 RUN mkdir -p /build/
@@ -30,9 +32,8 @@ WORKDIR /build
 RUN npm install
 
 
-ARG PROD_OCI_IMG_TAG=${PESTO_NODE_VERSION}-alpine3.16
 # 4th Stage for installing/setting up runtime linux system 
-FROM node:${PROD_OCI_IMG_TAG} AS runtime-linux
+FROM "node:${PROD_OCI_IMG_TAG}" AS runtime-linux
 RUN apk update && apk add --no-cache bash curl wget
 COPY oci/create-lx-user.alpine.sh .
 # For the moment, the linux user is created, but absolutely not used
