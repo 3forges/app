@@ -35,6 +35,10 @@ RUN npm install
 # 4th Stage for installing/setting up runtime linux system 
 FROM "node:${PROD_OCI_IMG_TAG}" AS runtime-linux
 RUN apk update && apk add --no-cache bash curl wget
+ARG PESTO_LX_USER
+ARG PESTO_LX_USER_GRP
+ARG PESTO_LX_UID
+ARG PESTO_LX_GID
 COPY backend/oci/create-lx-user.alpine.sh .
 COPY ./.prod.env.sh .
 # For the moment, the linux user is created, but absolutely not used
