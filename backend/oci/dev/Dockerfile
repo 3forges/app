@@ -37,7 +37,7 @@ FROM "node:${PROD_OCI_IMG_TAG}" AS runtime-linux
 RUN apk update && apk add --no-cache bash curl wget
 COPY oci/create-lx-user.alpine.sh .
 # For the moment, the linux user is created, but absolutely not used
-RUN chmod +x ./create-lx-user.alpine.sh && source ./.prod.env.sh && ./create-lx-user.alpine.sh
+RUN chmod +x ./create-lx-user.alpine.sh && source ./../.prod.env.sh && ./create-lx-user.alpine.sh
 RUN mkdir -p /pesto/app && mkdir -p /pesto/.secrets/ && chown node:node /pesto
 
 # Final Stage for running application
