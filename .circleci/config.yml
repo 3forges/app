@@ -46,8 +46,8 @@ jobs:
           name: "Config Docker Authentication"
           command: |
             apk update && apk add bash curl wget jq
-            chmod +x ./.circleci/scripts/docker/config.sh
-            ./.circleci/scripts/docker/config.sh
+            chmod +x ./.ci/scripts/docker/config.sh
+            ./.ci/scripts/docker/config.sh
             docker login
 
       - run:
