@@ -107,7 +107,7 @@ namespace DemoMongoClusterReader
 
             if (canFilterZip)
             {
-                zipCode = GetRandomNumber(1, 1000).ToString().PadLeft(4, '0');
+                zipCode = GetRandomNumber(1, 1001).ToString().PadLeft(4, '0');
                 filter = filterBuilder.Eq(x => x.ZipCode, zipCode);
             }
 

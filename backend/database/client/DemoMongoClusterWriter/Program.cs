@@ -45,7 +45,7 @@ namespace DemoMongoClusterWriter
                 Console.WriteLine($"{times} - start buiding records...");
                 for (int j = 0; j < nbrRecordsInBatch; j++)
                 {
-                    var zipCode = GetRandomNumber(1, 1000).ToString().PadLeft(4, '0');
+                    var zipCode = GetRandomNumber(1, 1001).ToString().PadLeft(4, '0');
 
                     requests.Add(new MyDocument
                     {

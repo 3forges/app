@@ -25,8 +25,8 @@ x-forges-common: &forges-common
     PESTO_LX_USER: pesto
     PESTO_LX_USER_GRP: pesto
     # PESTO_LX_PASSWORD: pesto
-    PESTO_LX_UID: 1000
-    PESTO_LX_GID: 1000
+    PESTO_LX_UID: 1001
+    PESTO_LX_GID: 1001
     PESTO_API_ROOT_USER: pesto
     PESTO_API_ROOT_PASSWORD: pesto
     PESTO_API_HOST: app.pesto.io

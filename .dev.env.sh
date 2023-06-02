@@ -8,8 +8,8 @@ export MONGODB_DOCKER_PORT=27017
 
 export PESTO_LX_USER=pesto
 export PESTO_LX_PASSWORD=pesto
-export PESTO_LX_UID=1000
-export PESTO_LX_GID=1000
+export PESTO_LX_UID=1001
+export PESTO_LX_GID=1001
 export PESTO_API_ROOT_USER=pesto
 export PESTO_API_ROOT_PASSWORD=pesto
 export PESTO_API_HOST=app.pesto.io
