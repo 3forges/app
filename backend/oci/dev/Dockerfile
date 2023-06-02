@@ -30,7 +30,7 @@ WORKDIR /build
 RUN npm install
 
 
-ARG PROD_OCI_IMG_TAG="${PESTO_NODE_VERSION}-alpine3.16"
+ARG PROD_OCI_IMG_TAG=${PESTO_NODE_VERSION}-alpine3.16
 # 4th Stage for installing/setting up runtime linux system 
 FROM node:${PROD_OCI_IMG_TAG} AS runtime-linux
 RUN apk update && apk add --no-cache bash curl wget
