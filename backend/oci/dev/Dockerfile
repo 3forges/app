@@ -49,9 +49,9 @@ RUN mkdir -p /pesto/app && mkdir -p /pesto/.secrets/ && chown node:node /pesto
 FROM runtime-linux AS runtime-env
 WORKDIR /pesto
 # copy compiled artifacts from compile-env
-COPY --from=compile-env --chown=node:node /compile/dist /pesto/app
+COPY --from=compile-env --chown=node:node /compile/backend/pesto/dist /pesto/app
 # copy production dependencies
-COPY --from=app-runtime-dependencies --chown=node:node /build /pesto/app
+COPY --from=app-runtime-dependencies --chown=node:node /build/backend/pesto/ /pesto/app
 # copy config/ folder if you are using node-config
 # COPY --chown=node:node config /backend/pesto/config
 USER node
