@@ -14,6 +14,7 @@ x-forges-common: &forges-common
       PESTO_LX_UID: 1000
       PESTO_LX_GID: 1000
   # command: pnpm dev
+  env_file: ./.dev.env
   expose:
     - ${PESTO_API_HTTPS_PORT}/tcp
     - ${PESTO_API_HTTP_PORT}/tcp
@@ -41,7 +42,7 @@ x-forges-common: &forges-common
     timeout: 20s
     retries: 3
 
-# starts 4 docker containers running minio server instances.
+# starts 4 docker containers running Pesto Api server instances.
 # using nginx reverse proxy, load balancing, you can access
 # it through port 9000.
 services:
@@ -65,7 +66,7 @@ services:
   api_database:
     image: mongo:5.0.2
     restart: unless-stopped
-    env_file: ./.env
+    env_file: ./.dev.env
     environment:
       - MONGO_INITDB_ROOT_USERNAME=$MONGODB_USER
       - MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD
@@ -77,6 +78,7 @@ services:
   nginx:
     image: nginx:1.19.2-alpine
     hostname: nginx
+    env_file: ./.dev.env
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
