@@ -16,7 +16,7 @@ COPY --from=build-deps /build /compile
 WORKDIR /compile
 COPY backend/pesto/ .
 # put your npm script to compile typescript
-RUN npm build
+RUN npm run build
 
 
 # 3rd Stage for installing runtime dependencies
@@ -49,9 +49,9 @@ RUN mkdir -p /pesto/app && mkdir -p /pesto/.secrets/ && chown node:node /pesto
 FROM runtime-linux AS runtime-env
 WORKDIR /pesto
 # copy compiled artifacts from compile-env
-COPY --from=compile-env --chown=node:node /compile/backend/pesto/dist /pesto/app
+COPY --from=compile-env --chown=node:node /compile/dist/ /pesto/app
 # copy production dependencies
-COPY --from=app-runtime-dependencies --chown=node:node /build/backend/pesto/ /pesto/app
+COPY --from=app-runtime-dependencies --chown=node:node /build/ /pesto/app
 # copy config/ folder if you are using node-config
 # COPY --chown=node:node config /backend/pesto/config
 USER node
