@@ -1,4 +1,4 @@
-ARG PESTO_NODE_VERSION=20. 2.0
+ARG PESTO_NODE_VERSION=20.2.0
 # 1st Stage for installing dependencies
 FROM node:${PESTO_NODE_VERSION}-bullseye-slim AS build-deps
 RUN mkdir -p /build/
