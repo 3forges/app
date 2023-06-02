@@ -1,0 +1,179 @@
+
+version: "2.1"
+
+parameters:
+  dockerize_me:
+    type: boolean
+    default: true
+  pesto_docker_tag:
+    type: string
+    default: "0.0.0-beta"
+  docker_ce_version: 
+    type: string
+    # default: '19.03.14'
+    default: '18.06.3'
+  docker_compose_version: 
+    type: string
+    default: '1.29.2'
+  # --- 
+  # credentials to publish the docker image to hub.docker.com
+  dockerhub_auth_secret_user:
+    type: string
+    default: "pokus"
+  dockerhub_auth_secret_pwd:
+    type: string
+    default: "pokus"
+
+
+jobs:
+  container_img_build_n_pub:
+    environment:
+      DOCKER_IMG_TAG: << pipeline.parameters.pesto_docker_tag >>
+      DOCKER_IMG_ORGNAME: pestooci
+      DOCKER_IMG_APPNAME: pesto
+      DOCKER_COMPOSE_VERSION: << pipeline.parameters.docker_compose_version >>
+      PESTO_CI_DOCKER_AUTH_TOKEN: $PESTO_CI_DOCKER_AUTH_TOKEN
+    working_directory: /app
+    docker:
+      # - image: docker:17.05.0-ce-git
+      # https://github.com/docker/docker-ce/releases
+      # - image: docker:19.03.14-ce-git
+      - image: docker:<< pipeline.parameters.docker_ce_version >>-ce-git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: 
+          name: "Config Docker Authentication"
+          command: |
+            apk update && apk add bash curl wget jq
+            chmod +x ./.circleci/scripts/docker/config.sh
+            ./.circleci/scripts/docker/config.sh
+            docker login
+
+      - run:
+          name: Install Python 3
+          command: | 
+            apk update && apk add --no-cache build-base python3-dev libffi-dev
+
+            apk update --no-cache
+            apk del python
+            rm /usr/bin/python || true
+            apk add --update --no-cache python3 && apk add python3 && ln -sf python3 /usr/bin/python
+            apk add --update --no-cache python3-pip || true
+            apk add --update --no-cache pip3 || true
+            apk add --update --no-cache py3-pip || true
+            apk add --no-cache py3-pip || true
+            apk add --update --no-cache py3-setuptools || true
+            apk add --no-cache py3-setuptools || true
+            python3 -m pip install --upgrade --force pip
+            python --version
+            pip -V || true
+            pip3 -V || true
+      - run:
+          name: Install dependencies
+          command: |
+            alias pip='pip3'
+            apk update
+            echo ">> Check version of Python before python 3 : "
+            which python || true
+            which pip || true
+            python --version || true
+            pip -V || true
+            ls -alh /usr/bin/python || true
+            echo ">> Unintsalling Python 2.* : "
+            rm /usr/bin/python || true
+            apk del python
+            apk del pip || true
+            apk del py3-pip || true
+            echo ">> After Unintsalling Python 2.* : "
+            python --version || true
+            pip -V || true
+            apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
+            apk add --update --no-cache python3-pip || true
+            apk add --update --no-cache pip3 || true
+            apk add --update --no-cache py3-pip || true
+            apk add --update --no-cache py3-setuptools
+            python --version
+            echo ">> Check version of Python : "
+            python --version
+            echo " >> ---- "
+            python -m pip install --upgrade pip
+            echo ">> Check version of Python used by pip : "
+            pip -V
+            echo " >> ---- "
+            
+            # ---
+            # https://github.com/boschresearch/pcg_gazebo/issues/123#issuecomment-695895893
+            pip install pyrsistent==0.16.1
+            # apk add --no-cache \
+              # py-pip=9.0.0-r1
+            apk update
+            apk add py-pip
+            apk add --update py-pip
+            # pip install \
+              # docker-compose \
+              # awscli
+            pip install \
+              docker-compose==$DOCKER_COMPOSE_VERSION \
+              awscli
+            # pip install \
+              # docker-compose==$DOCKER_COMPOSE_VERSION \
+              # awscli==1.27.136
+            # pip install \
+              # docker-compose==1.12.0 \
+              # awscli==1.11.76
+      - restore_cache:
+          keys:
+            - v1-{{ .Branch }}
+          paths:
+            - /caches/${DOCKER_IMG_ORGNAME}.${DOCKER_IMG_APPNAME}.${DOCKER_IMG_TAG}.tar
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set +o pipefail
+            docker load -i /caches/${DOCKER_IMG_ORGNAME}.${DOCKER_IMG_APPNAME}.${DOCKER_IMG_TAG}.tar | true
+      - run:
+          name: Build Pesto application Docker image
+          command: |
+            # docker build --cache-from=app -t app .
+            docker build -t ${DOCKER_IMG_ORGNAME}/${DOCKER_IMG_APPNAME}:${DOCKER_IMG_TAG} . -f Dockerfile.bullseye.pesto
+      - run:
+          name: Save Docker image layer cache
+          command: |
+            mkdir -p /caches
+            docker save -o /caches/${DOCKER_IMG_ORGNAME}.${DOCKER_IMG_APPNAME}.${DOCKER_IMG_TAG}.tar ${DOCKER_IMG_ORGNAME}/${DOCKER_IMG_APPNAME}:${DOCKER_IMG_TAG}
+            echo ">>> +> +> --- checking the docker image tar :"
+            ls -alh /caches
+            echo ">>> +> +> --- checking the docker image tar :"
+            ls -alh /caches/${DOCKER_IMG_ORGNAME}.${DOCKER_IMG_APPNAME}.${DOCKER_IMG_TAG}.tar
+      - save_cache:
+          key: v1-{{ .Branch }}-{{ epoch }}
+          # key: v1-{{ .Branch }}-{{ epoch }}
+          paths:
+            - /caches/${DOCKER_IMG_ORGNAME}.${DOCKER_IMG_APPNAME}.${DOCKER_IMG_TAG}.tar
+      - run:
+          name: Run tests
+          command: |
+            echo "docker-compose -f ./docker-compose.test.yml up"
+      - deploy:
+          name: Push application Docker image
+          command: |
+            echo "Not for now: we have to create a docker hub account first"
+
+            docker push ${DOCKER_IMG_ORGNAME}/${DOCKER_IMG_APPNAME}:${DOCKER_IMG_TAG}
+
+            # if [ "${CIRCLE_BRANCH}" == "master" ]; then
+            #   login="$(aws ecr get-login)"
+            #   ${login}
+            #   docker tag app "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
+            #   docker push "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
+            # fi
+
+workflows:
+  version: 2
+  containerrize:
+    when: << pipeline.parameters.dockerize_me >>
+    # when: 
+      # not: << pipeline.parameters.dockerize_me >> 
+    jobs:
+      - container_img_build_n_pub

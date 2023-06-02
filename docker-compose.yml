@@ -2,17 +2,41 @@ version: '3.7'
 
 # Settings and configurations that are common for all containers
 x-forges-common: &forges-common
-  image: troisforges.io/pesto/api:dev
+  image: troisforges.io/pesto/api:0.0.1-dev
+  build:
+    # context: ./backend/oci/dev
+    context: ./backend/
+    dockerfile: Dockerfile
+    args:
+      PESTO_LX_USER: pesto
+      PESTO_LX_USER_GRP: pesto
+      PESTO_LX_PASSWORD: pesto
+      PESTO_LX_UID: 1000
+      PESTO_LX_GID: 1000
   # command: pnpm dev
   expose:
-    - "9043"
-    - "9033"
+    - "${PESTO_API_HTTPS_PORT}"
+    - "${PESTO_API_HTTP_PORT}"
+  port:
+    - "${PESTO_API_HTTPS_PORT_EXT}:${PESTO_API_HTTPS_PORT}"
+    - "${PESTO_API_HTTP_PORT_EXT}:${PESTO_API_HTTP_PORT}"    
   environment:
+    PESTO_LX_USER: pesto
+    PESTO_LX_USER_GRP: pesto
+    PESTO_LX_PASSWORD: pesto
+    PESTO_LX_UID: 1000
+    PESTO_LX_GID: 1000
     PESTO_API_ROOT_USER: pesto
     PESTO_API_ROOT_PASSWORD: pesto
-    PESTO_API_BASE_URL: https://app.pesto.io/api
+    PESTO_API_HOST: app.pesto.io
+    PESTO_API_BASE_URL: /api
+    PESTO_API_HTTPS_PORT: 9043
+    PESTO_API_HTTP_PORT: 9033
+    PESTO_SECRETS_FILE: /pesto/.secrets/.secrets.json
+  volumes:
+    - $PWD/backend/.secrets/.secrets.json:/pesto/.secrets/.secrets.json:ro
   healthcheck:
-    test: ["CMD", "curl", "-f", "http://localhost:9000/pesto/api/live"]
+    test: ["CMD", "curl", "-f", "http://0.0.0.0:9043/pesto/api/live"]
     interval: 30s
     timeout: 20s
     retries: 3
@@ -21,33 +45,34 @@ x-forges-common: &forges-common
 # using nginx reverse proxy, load balancing, you can access
 # it through port 9000.
 services:
-  minio1:
-    <<: *forges-common
-    hostname: minio1
-    volumes:
-      - data1-1:/data1
-      - data1-2:/data2
+  # minio1:
+  #   <<: *forges-common
+  #   hostname: minio1
+  #   volumes:
+  #     - data1-1:/data1
+  #     - data1-2:/data2
+  # --- 
+  # minio2:
+  #   <<: *forges-common
+  #   hostname: minio2
+  #   volumes:
+  #     - data2-1:/data1
+  #     - data2-2:/data2
 
-  minio2:
+  # frontend:
+  api:
     <<: *forges-common
-    hostname: minio2
+  api_database:
+    image: mongo:5.0.2
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$MONGODB_USER
+      - MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD
+    ports:
+      - $MONGODB_LOCAL_PORT:$MONGODB_DOCKER_PORT
     volumes:
-      - data2-1:/data1
-      - data2-2:/data2
-
-  minio3:
-    <<: *forges-common
-    hostname: minio3
-    volumes:
-      - data3-1:/data1
-      - data3-2:/data2
-
-  minio4:
-    <<: *forges-common
-    hostname: minio4
-    volumes:
-      - data4-1:/data1
-      - data4-2:/data2
+      - db:/data/db
 
   nginx:
     image: nginx:1.19.2-alpine
@@ -75,8 +100,3 @@ volumes:
   data4-1:
   data4-2:
 # ---
-
-services:
-  frontend:
-  api:
-  api_database:
