@@ -18,7 +18,7 @@ x-forges-common: &forges-common
   expose:
     - ${PESTO_API_HTTPS_PORT}/tcp
     - ${PESTO_API_HTTP_PORT}/tcp
-  port:
+  ports:
     - ${PESTO_API_HTTPS_PORT_EXT}:${PESTO_API_HTTPS_PORT}
     - ${PESTO_API_HTTP_PORT_EXT}:${PESTO_API_HTTP_PORT}
   environment:
