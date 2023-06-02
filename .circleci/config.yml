@@ -166,7 +166,7 @@ jobs:
       - deploy:
           name: Push application Docker image
           command: |
-            echo "Not for now: we have to create a docker hub account first"
+            # echo "Not for now: we have to create a docker hub account first"
 
             docker push ${DOCKER_IMG_ORGNAME}/${DOCKER_IMG_APPNAME}:${DOCKER_IMG_TAG}
 
