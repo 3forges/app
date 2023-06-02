@@ -15,11 +15,11 @@ x-forges-common: &forges-common
       PESTO_LX_GID: 1000
   # command: pnpm dev
   expose:
-    - "${PESTO_API_HTTPS_PORT}"
-    - "${PESTO_API_HTTP_PORT}"
+    - ${PESTO_API_HTTPS_PORT}/tcp
+    - ${PESTO_API_HTTP_PORT}/tcp
   port:
-    - "${PESTO_API_HTTPS_PORT_EXT}:${PESTO_API_HTTPS_PORT}"
-    - "${PESTO_API_HTTP_PORT_EXT}:${PESTO_API_HTTP_PORT}"    
+    - ${PESTO_API_HTTPS_PORT_EXT}:${PESTO_API_HTTPS_PORT}
+    - ${PESTO_API_HTTP_PORT_EXT}:${PESTO_API_HTTP_PORT}
   environment:
     PESTO_LX_USER: pesto
     PESTO_LX_USER_GRP: pesto
