@@ -73,7 +73,7 @@ services:
     ports:
       - $MONGODB_LOCAL_PORT:$MONGODB_DOCKER_PORT
     volumes:
-      - db:/data/db
+      - api_db:/data/db
 
   nginx:
     image: nginx:1.19.2-alpine
@@ -89,4 +89,5 @@ services:
       - api_database
       # - frontend
 
-
+volumes:
+  api_db: {}
