@@ -6,7 +6,7 @@ x-forges-common: &forges-common
   build:
     # context: ./backend/oci/dev
     context: ./backend/
-    dockerfile: Dockerfile
+    dockerfile: oci/dev/Dockerfile
     args:
       PESTO_LX_USER: pesto
       PESTO_LX_USER_GRP: pesto
