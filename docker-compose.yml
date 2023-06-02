@@ -85,9 +85,8 @@ services:
       - "9000:9000"
       - "9001:9001"
     depends_on:
-      - minio1
-      - minio2
-      - minio3
-      - minio4
+      - api
+      - api_database
+      # - frontend
 
 
