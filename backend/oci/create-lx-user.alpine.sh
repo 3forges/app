@@ -23,4 +23,4 @@ adduser -u ${PESTO_LX_UID} -G ${PESTO_LX_USER_GRP} -D "${PESTO_LX_USER}" -s /bin
 
 # -u is the UID
 # -D permits to create an user without password
-adduser -u ${PESTO_LX_UID} -G groupname -h /home/${PESTO_LX_USER} -D ${PESTO_LX_USER}
+# adduser -u ${PESTO_LX_UID} -G groupname -h /home/${PESTO_LX_USER} -D ${PESTO_LX_USER}
