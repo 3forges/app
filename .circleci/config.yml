@@ -32,7 +32,7 @@ jobs:
       DOCKER_IMG_ORGNAME: pestooci
       DOCKER_IMG_APPNAME: pesto
       DOCKER_COMPOSE_VERSION: << pipeline.parameters.docker_compose_version >>
-      PESTO_CI_DOCKER_AUTH_TOKEN: $PESTO_CI_DOCKER_AUTH_TOKEN
+      # PESTO_CI_DOCKER_AUTH_TOKEN: $PESTO_CI_DOCKER_AUTH_TOKEN
     working_directory: /app
     docker:
       # - image: docker:17.05.0-ce-git
