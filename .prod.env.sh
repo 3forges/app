@@ -1,7 +1,7 @@
 #!/bin/sh
 
-export MONGODB_USER=pesto
-export MONGODB_PASSWORD=pesto123456
+export MONGODB_USER=root
+export MONGODB_PASSWORD=123456
 export MONGODB_DATABASE=PestoDb
 export MONGODB_LOCAL_PORT=7017
 export MONGODB_DOCKER_PORT=27017
@@ -19,3 +19,7 @@ export PESTO_API_HTTP_PORT=9033
 export PESTO_API_HTTPS_PORT_EXT=9043
 export PESTO_API_HTTP_PORT_EXT=9033
 export PESTO_SECRETS_FILE=/pesto/.secrets/.secrets.json
+
+export DOCKER_IMG_TAG="0.0.1-dev"
+export DOCKER_IMG_ORGNAME=pestooci
+export DOCKER_IMG_APPNAME=pesto-api

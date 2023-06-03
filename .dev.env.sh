@@ -19,3 +19,7 @@ export PESTO_API_HTTP_PORT=9033
 export PESTO_API_HTTPS_PORT_EXT=9043
 export PESTO_API_HTTP_PORT_EXT=9033
 export PESTO_SECRETS_FILE=/pesto/.secrets/.secrets.json
+
+export DOCKER_IMG_TAG="0.0.1-dev"
+export DOCKER_IMG_ORGNAME=pestooci
+export DOCKER_IMG_APPNAME=pesto-api

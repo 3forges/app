@@ -19,10 +19,10 @@ parameters:
   # credentials to publish the docker image to hub.docker.com
   dockerhub_auth_secret_user:
     type: string
-    default: "pokus"
+    default: "pesto"
   dockerhub_auth_secret_pwd:
     type: string
-    default: "pokus"
+    default: "pesto"
 
 
 jobs:
@@ -149,6 +149,7 @@ jobs:
           name: Save Docker image layer cache
           command: |
             mkdir -p /caches
+            docker images
             docker save -o /caches/${DOCKER_IMG_ORGNAME}.${DOCKER_IMG_APPNAME}.${DOCKER_IMG_TAG}.tar ${DOCKER_IMG_ORGNAME}/${DOCKER_IMG_APPNAME}:${DOCKER_IMG_TAG}
             echo ">>> +> +> --- checking the docker image tar :"
             ls -alh /caches
