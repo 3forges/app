@@ -39,8 +39,11 @@ jobs:
       # - image: docker:17.05.0-ce-git
       # https://github.com/docker/docker-ce/releases
       # - image: docker:19.03.14-ce-git
-      - image: docker:<< pipeline.parameters.docker_ce_version >>-ce-git
+      # - image: docker:<< pipeline.parameters.docker_ce_version >>-ce-git
+      - image: docker:24.0.2-alpine3.18
     steps:
+      - | 
+         apk update && apk add git curl jq wget
       - checkout
       - setup_remote_docker
       - run: 
