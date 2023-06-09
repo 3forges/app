@@ -59,7 +59,7 @@ jobs:
           command: | 
             apk update && apk add --no-cache build-base python3-dev libffi-dev
             apk update --no-cache
-            apk del python
+            apk del python || true
             rm /usr/bin/python || true
             apk add --update --no-cache python3 && apk add python3 && ln -sf python3 /usr/bin/python
             apk add --update --no-cache python3-pip || true
