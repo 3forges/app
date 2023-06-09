@@ -144,7 +144,7 @@ jobs:
             # source ./.dev.env.sh
             # docker-compose build
             source ./.prod.env.sh
-            docker-compose build
+            docker-compose build -f docker-compose.build.yml
       - run:
           name: Save Docker image layer cache
           command: |
