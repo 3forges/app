@@ -57,12 +57,7 @@ jobs:
       - run:
           name: Install Python 3
           command: | 
-            python --version
-            pip -V || true
-            pip3 -V || true
-            echo "skip python install"
             apk update && apk add --no-cache build-base python3-dev libffi-dev
-
             apk update --no-cache
             apk del python
             rm /usr/bin/python || true
