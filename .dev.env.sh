@@ -1,10 +1,15 @@
 #!/bin/sh
 
-export MONGODB_USER=root
-export MONGODB_PASSWORD=123456
-export MONGODB_DATABASE=PestoDb
-export MONGODB_LOCAL_PORT=7017
-export MONGODB_DOCKER_PORT=27017
+export PESTO_MONGODB_USER=root
+export PESTO_MONGODB_PASSWORD=123456
+export PESTO_MONGODB_DATABASE=PestoDb
+export PESTO_MONGODB_LOCAL_PORT=7017
+export PESTO_MONGODB_DOCKER_PORT=27017
+# ---
+# https://hub.docker.com/_/mongo/tags?page=1&name=6
+export PESTO_MONGODB_OCI_TAG=6.0.6
+
+# --
 
 export PESTO_LX_USER=pesto
 export PESTO_LX_PASSWORD=pesto

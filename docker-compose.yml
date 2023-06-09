@@ -54,18 +54,22 @@ services:
   # frontend:
   api:
     <<: *forges-common
+
   api_database:
-    image: mongo:5.0.2
+    image: mongo:$PESTO_MONGODB_OCI_TAG
     restart: unless-stopped
     env_file: ./.dev.env
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=$MONGODB_USER
-      - MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD
+      - MONGO_INITDB_ROOT_USERNAME=$PESTO_MONGODB_USER
+      - MONGO_INITDB_ROOT_PASSWORD=$PESTO_MONGODB_PASSWORD
     ports:
-      - $MONGODB_LOCAL_PORT:$MONGODB_DOCKER_PORT
+      - $PESTO_MONGODB_LOCAL_PORT:$PESTO_MONGODB_DOCKER_PORT
     volumes:
       - api_db:/data/db
-
+    networks:
+      - pesto_back_net
+      - pesto_front_net
+      
   nginx:
     image: nginx:1.19.2-alpine
     hostname: nginx
@@ -79,6 +83,12 @@ services:
       - api
       - api_database
       # - frontend
+    networks:
+      - pesto_back_net
+      - pesto_front_net
 
 volumes:
   api_db: {}
+networks:
+  pesto_back_net:
+  pesto_front_net:
