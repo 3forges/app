@@ -42,8 +42,8 @@ jobs:
       # - image: docker:<< pipeline.parameters.docker_ce_version >>-ce-git
       - image: docker:24.0.2-alpine3.18
     steps:
-      - | 
-         apk update && apk add git curl jq wget
+      # - | 
+      #    apk update && apk add git curl jq wget
       - checkout
       - setup_remote_docker
       - run: 
