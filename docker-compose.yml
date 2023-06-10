@@ -1,17 +1,37 @@
 version: '3.7'
 
-# Settings and configurations that are common for all containers
+x-forges-front: &forges-front
+  image: "${DOCKER_IMG_ORGNAME}/${DOCKER_IMG_FRONT_NAME}:${DOCKER_IMG_TAG}"
+  env_file: ./.dev.env
+  volumes:
+    - $PWD/pesto.yml:/etc/pesto/pesto.yml:ro
+  expose:
+    - "3000"
+  # ports:
+    # - "9980:3000"
+  depends_on:
+    - api
+    - api_database
+  networks:
+    pesto_back_net:
+      aliases:
+        - app.pesto.io
+    pesto_front_net:
+      aliases:
+        - app.pesto.io
+
+# Settings and configurations that are common for all backend containers
 x-forges-common: &forges-common
   # image: troisforges.io/pesto-api:0.0.1-dev
-  image: "${DOCKER_IMG_ORGNAME}/${DOCKER_IMG_APPNAME}:${DOCKER_IMG_TAG}"
+  image: "${DOCKER_IMG_ORGNAME}/${DOCKER_IMG_BACK_NAME}:${DOCKER_IMG_TAG}"
   # command: pnpm dev
   env_file: ./.dev.env
   expose:
     - ${PESTO_API_HTTPS_PORT}/tcp
     - ${PESTO_API_HTTP_PORT}/tcp
-  ports:
-    - ${PESTO_API_HTTPS_PORT_EXT}:${PESTO_API_HTTPS_PORT}
-    - ${PESTO_API_HTTP_PORT_EXT}:${PESTO_API_HTTP_PORT}
+  # ports:
+    # - ${PESTO_API_HTTPS_PORT_EXT}:${PESTO_API_HTTPS_PORT}
+    # - ${PESTO_API_HTTP_PORT_EXT}:${PESTO_API_HTTP_PORT}
   environment:
     PESTO_LX_USER: pesto
     PESTO_LX_USER_GRP: pesto
@@ -32,26 +52,60 @@ x-forges-common: &forges-common
     interval: 30s
     timeout: 20s
     retries: 3
-
+  networks:
+    pesto_back_net:
+      aliases:
+        - api.pesto.io
+    pesto_front_net:
+      aliases:
+        - api.pesto.io
 # starts 4 docker containers running Pesto Api server instances.
 # using nginx reverse proxy, load balancing, you can access
 # it through port 9000.
 services:
-  # minio1:
-  #   <<: *forges-common
-  #   hostname: minio1
-  #   volumes:
-  #     - data1-1:/data1
-  #     - data1-2:/data2
-  # --- 
-  # minio2:
-  #   <<: *forges-common
-  #   hostname: minio2
-  #   volumes:
-  #     - data2-1:/data1
-  #     - data2-2:/data2
+  # pesto1:
+  #   hostname: app1.pesto.io
+  #   networks:
+  #     pesto_back_net:
+  #       aliases:
+  #         - app1.pesto.io
+  #     pesto_front_net:
+  #       aliases:
+  #         - app1.pesto.io
 
-  # frontend:
+
+  # pesto2:
+  #   hostname: app2.pesto.io
+  #   networks:
+  #     pesto_back_net:
+  #       aliases:
+  #         - app2.pesto.io
+  #     pesto_front_net:
+  #       aliases:
+  #         - app2.pesto.io
+
+
+  # pesto3:
+  #   hostname: app3.pesto.io
+  #   networks:
+  #     pesto_back_net:
+  #       aliases:
+  #         - app3.pesto.io
+  #     pesto_front_net:
+  #       aliases:
+  #         - app3.pesto.io
+
+  # pesto4:
+  #   hostname: app4.pesto.io
+  #   networks:
+  #     pesto_back_net:
+  #       aliases:
+  #         - app4.pesto.io
+  #     pesto_front_net:
+  #       aliases:
+  #         - app4.pesto.io
+
+
   api:
     <<: *forges-common
 
@@ -67,9 +121,10 @@ services:
     volumes:
       - api_db:/data/db
     networks:
-      - pesto_back_net
-      - pesto_front_net
-      
+      pesto_back_net:
+        aliases:
+          - db.pesto.io
+
   nginx:
     image: nginx:1.19.2-alpine
     hostname: nginx
@@ -84,8 +139,12 @@ services:
       - api_database
       # - frontend
     networks:
-      - pesto_back_net
-      - pesto_front_net
+      pesto_back_net:
+        aliases:
+          - reverse_proxy.pesto.io
+      pesto_front_net:
+        aliases:
+          - reverse_proxy.pesto.io
 
 volumes:
   api_db: {}

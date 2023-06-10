@@ -1,3 +1,5 @@
 # 
 
-Astro React Tailwind Ionic
+Astro React Tailwind Ionic : no
+
+React Native Expo : yeaaa

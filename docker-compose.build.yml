@@ -3,9 +3,8 @@ version: '3.7'
 # Settings and configurations that are common for all containers
 x-forges-common: &forges-common
   # image: troisforges.io/pesto-api:0.0.1-dev
-  image: "${DOCKER_IMG_ORGNAME}/${DOCKER_IMG_APPNAME}:${DOCKER_IMG_TAG}"
+  image: "${DOCKER_IMG_ORGNAME}/${DOCKER_IMG_BACK_NAME}:${DOCKER_IMG_TAG}"
   build:
-    # context: ./backend/oci/dev
     context: .
     dockerfile: backend/oci/dev/Dockerfile
     args:
@@ -17,3 +16,15 @@ x-forges-common: &forges-common
 
   api:
     <<: *forges-common
+
+  # frontend:
+  #   image: "${DOCKER_IMG_ORGNAME}/${DOCKER_IMG_FRONT_NAME}:${DOCKER_IMG_TAG}"
+  #   build:
+  #     context: .
+  #     dockerfile: frontend/oci/dev/Dockerfile
+  #     args:
+  #       PESTO_LX_USER: pesto
+  #       PESTO_LX_USER_GRP: pesto
+  #       # PESTO_LX_PASSWORD: pesto
+  #       PESTO_LX_UID: 1001
+  #       PESTO_LX_GID: 1001

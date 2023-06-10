@@ -27,4 +27,5 @@ export PESTO_SECRETS_FILE=/pesto/.secrets/.secrets.json
 
 export DOCKER_IMG_TAG="0.0.1-dev"
 export DOCKER_IMG_ORGNAME=pestooci
-export DOCKER_IMG_APPNAME=pesto-api
+export DOCKER_IMG_BACK_NAME=pesto-api
+export DOCKER_IMG_FRONT_NAME=pesto-web
