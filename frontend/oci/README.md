@@ -1,5 +1,27 @@
 # Docker image Pesto frontend
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Scaffold a react-native expo app 
 
 
@@ -89,7 +111,204 @@ pnpm dlx create-expo-app -t expo-booster .
 
 ```
 
+
+* Other try :
+
+
+```bash
+# npx create-expo-app -t expo-template-blank-typescript .
+pnpm dlx create-expo-app -t expo-template-blank-typescript .
+pnpm add -D ts-node typescript @expo/webpack-config
+
+
+cat <<EOF > ./webpack.config.js
+require('ts-node/register');
+module.exports = require('./webpack.config.ts');
+EOF
+
+
+
+cat <<EOF > ./webpack.config.ts
+import createExpoWebpackConfigAsync from '@expo/webpack-config/webpack';
+import { Arguments, Environment } from '@expo/webpack-config/webpack/types';
+
+module.exports = async function (env: Environment, argv: Arguments) {
+  const config = await createExpoWebpackConfigAsync(env, argv);
+  // Customize the config before returning it.
+  return config;
+};
+
+EOF
+
+
+
+cat <<EOF > ./metro.config.js
+require('ts-node/register');
+module.exports = require('./metro.config.ts');
+EOF
+
+
+cat <<EOF > ./metro.config.ts
+import { getDefaultConfig } from 'expo/metro-config';
+const config = getDefaultConfig(__dirname);
+module.exports = config;
+EOF
+
+
+
+cat <<EOF > ./app.config.js
+require('ts-node/register');
+module.exports = require('./app.config.ts');
+EOF
+
+cat <<EOF > ./app.config.ts
+import { ExpoConfig } from 'expo/config';
+
+// In SDK 46 and lower, use the following import instead:
+// import { ExpoConfig } from '@expo/config-types';
+
+const config: ExpoConfig = {
+  name: 'my-app',
+  slug: 'my-app',
+};
+
+export default config;
+
+EOF
+
+# npx expo install react-native-web@~0.18.10 react-dom@18.2.0
+pnpm dlx expo install react-native-web@~0.18.10 react-dom@18.2.0
+
+# dependencies:
+# + react-dom 18.2.0
+# + react-native-web 0.18.12 (0.19.4 is available)
+pnpm add -D @types/expo @types/node
+pnpm add -D @types/babel__core
+# metro-react-native-babel-preset
+
+export PATH_TO_PKG_NODE_MODULES_TYPES_DEF='/C/Users/Utilisateur/private_3forges/frontend/oci/example_expo_app3/node_modules/.pnpm/expo@48.0.19_@babel+core@7.22.5/node_modules/expo/metro-config.d.ts'
+
+export OTHER_PATH_TO_PKG='C:/Users/Utilisateur/private_3forges/frontend/oci/example_expo_app3/node_modules/expo/metro-config.js'
+
+cat <<EOF >${PATH_TO_PKG_NODE_MODULES_TYPES_DEF}
+declare module 'expo/metro-config';
+EOF
+
+pnpm i 
+pnpm run web
+```
+
+
+
+
+
+## Other tries, without `pnpm`
+
+
+* Blank TypeScript project template : 
+```bash
+# npx create-expo-app -t expo-template-blank-typescript .
+npx create-expo-app -t expo-template-blank-typescript . && \
+npm i -D ts-node typescript @expo/webpack-config @types/expo
+
+
+cat <<EOF > ./webpack.config.js
+require('ts-node/register');
+module.exports = require('./webpack.config.ts');
+EOF
+
+
+
+cat <<EOF > ./webpack.config.ts
+import createExpoWebpackConfigAsync from '@expo/webpack-config/webpack';
+import { Arguments, Environment } from '@expo/webpack-config/webpack/types';
+
+module.exports = async function (env: Environment, argv: Arguments) {
+  const config = await createExpoWebpackConfigAsync(env, argv);
+  // Customize the config before returning it.
+  return config;
+};
+EOF
+
+
+
+cat <<EOF > ./metro.config.js
+require('ts-node/register');
+module.exports = require('./metro.config.ts');
+EOF
+
+
+cat <<EOF > ./metro.config.ts
+import { getDefaultConfig } from 'expo/metro-config';
+const config = getDefaultConfig(__dirname);
+module.exports = config;
+EOF
+
+
+
+cat <<EOF > ./app.config.js
+require('ts-node/register');
+module.exports = require('./app.config.ts');
+EOF
+
+cat <<EOF > ./app.config.ts
+import { ExpoConfig } from 'expo/config';
+
+// In SDK 46 and lower, use the following import instead:
+// import { ExpoConfig } from '@expo/config-types';
+
+const config: ExpoConfig = {
+  name: 'my-app',
+  slug: 'my-app',
+};
+
+export default config;
+
+EOF
+
+export PATH_TO_PKG_NODE_MODULES_TYPES_DEF='/c/Users/Utilisateur/private_3forges/frontend/oci/example_expo_app3/node_modules/expo/metro-config.ts'
+
+cat <<EOF >${PATH_TO_PKG_NODE_MODULES_TYPES_DEF}
+declare module 'expo/metro-config';
+EOF
+
+npm i 
+npm run web
+```
+
+<!--
+* other rich template (nope, not even if i get rid of `pnpm`, would it work...) : 
+
+```bash
+# --- 
+# 
+# ---
+# First execution will fail on windows, because
+# of a file path issue, we on't care much about
+npx create-expo-app --template @rocali/expo-ts-rest-template . || true
+
+export SLASHED_USERPROFILE=$(echo $USERPROFILE | sed "s#\\\#/#g" | sed "s#C:#/c#g")
+
+export NPX_TMPLT_CACHE_DIR="${SLASHED_USERPROFILE}/AppData/Local/Temp/.create-expo-app/template-cache"
+
+mdkir -p ${NPX_TMPLT_CACHE_DIR}/@rocali/
+export EXPO_TMPLT_VERSION="1.0.6"
+cp ${NPX_TMPLT_CACHE_DIR}/rocali-expo-ts-rest-template-${EXPO_TMPLT_VERSION}.tgz ${NPX_TMPLT_CACHE_DIR}/@rocali/expo-ts-rest-template-${EXPO_TMPLT_VERSION}.tgz
+
+npx create-expo-app --template @rocali/expo-ts-rest-template respawned/ || true
+
+npx expo install @expo/webpack-config@^18.0.1
+# npm i -D ts-node typescript @expo/webpack-config @types/expo
+npx expo install ts-node typescript @expo/webpack-config @types/expo
+
+npm i 
+npm run web
+```
+
+-->
+
 ## ANNEX: References
 
 * Dockerize a react-native expo app: https://medium.com/@ganiilhamirsyadi/dockerize-react-native-expo-app-152c1e65e76c
 * react-native components: https://reactnativeelements.com/docs/installation
+* react typescript cheatsheet : https://github.com/typescript-cheatsheets/react
