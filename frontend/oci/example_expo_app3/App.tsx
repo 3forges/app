@@ -17,17 +17,17 @@ export default function App() {
   //const [taskItems, setTaskItems] = React.useState([]);
   // const [taskItems, setTaskItems] = React.useState(0);
   const [taskItems, setTaskItems] = React.useState<PestoTask[]>([]);
-  const firstTask: PestoTask = {text: "faire le ménage"}
-  
+  const defaultPestoTask: PestoTask = {text: "faire le ménage"}
+  // setTaskItems([defaultPestoTask]);
 
   function handleAddTask() {
     Keyboard.dismiss();
     // taskItems.push(firstTask);
     // setTaskItems([...taskItems, task])
     
-    let editedTask: PestoTask = {text: `${task?.text || "fainéantise toue la journée"}`}
+    let editedTask: PestoTask = {text: `${task?.text || defaultPestoTask.text}`}
     setTaskItems(taskItems => [...taskItems, editedTask])
-    setTask(firstTask);
+    setTask(editedTask);
   }
 
   function completeTask(index: any) {
@@ -73,10 +73,9 @@ export default function App() {
         <TextInput
           style={styles.input}
           placeholder={"Add new item"}
-          value={task?.text}
+          value={task?.text || "Default Pesto Taks is to code one hour in react native"}
           onChangeText={(newText) => setTask({ text: newText})}
-          defaultValue={task?.text}
-        />
+       />
         <TouchableOpacity onPress={() => handleAddTask()}>
           <View style={styles.addWrapper}>
             <Text style={styles.addText}>+</Text>
