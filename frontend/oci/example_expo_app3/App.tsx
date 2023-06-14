@@ -11,13 +11,15 @@ import {
   ScrollView,
 } from "react-native";
 import Task, { PestoTask } from "./Task";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 export default function App() {
   const [task, setTask] = React.useState<PestoTask>();
+  const [isCompletedState, setIsCompletedState] = React.useState<boolean>(false);
   //const [taskItems, setTaskItems] = React.useState([]);
   // const [taskItems, setTaskItems] = React.useState(0);
   const [taskItems, setTaskItems] = React.useState<PestoTask[]>([]);
-  const defaultPestoTask: PestoTask = {text: "faire le ménage"}
+  const defaultPestoTask: PestoTask = {text: "faire le ménage", isCompleted: false}
   // setTaskItems([defaultPestoTask]);
 
   function handleAddTask() {
@@ -25,12 +27,17 @@ export default function App() {
     // taskItems.push(firstTask);
     // setTaskItems([...taskItems, task])
     
-    let editedTask: PestoTask = {text: `${task?.text || defaultPestoTask.text}`}
+    let editedTask: PestoTask = {text: `${task?.text || defaultPestoTask.text}`, isCompleted: false}
     setTaskItems(taskItems => [...taskItems, editedTask])
     setTask(editedTask);
   }
 
   function completeTask(index: any) {
+    taskItems[index].isCompleted = ! taskItems[index].isCompleted 
+    setIsCompletedState(taskItems[index].isCompleted)
+  }
+
+  function deleteTask(index: any) {
     let itemsCopy = [...taskItems];
     itemsCopy.splice(index, 1);
     setTaskItems(itemsCopy);
@@ -48,15 +55,16 @@ export default function App() {
         {/* Today's Tasks */}
         <View style={styles.tasksWrapper}>
           <Text style={styles.sectionTitle}>My ToDo List Biobob sans internet oh ouiiiiiid</Text>
-          <View style={styles.items}>
+          <View nativeID="VINCENT" id="bobobobo" style={styles.items}>
             {/* This is where the tasks will go! */}
             {taskItems.map((item, index) => {
               return (
                 <TouchableOpacity
                   key={index}
+                  style={/*taskItems[index].isCompleted*/isCompletedState?styles.tasksWrapper:styles.tasksWrapperDone}
                   onPress={() => completeTask(index)}
                 >
-                  <Task text={item.text} />
+                  <Task text={item.text} isCompleted={false} />
                 </TouchableOpacity>
               );
             })}
@@ -74,7 +82,7 @@ export default function App() {
           style={styles.input}
           placeholder={"Add new item"}
           value={task?.text}
-          onChangeText={(newText) => setTask({ text: newText})}
+          onChangeText={(newText) => setTask({ text: newText, isCompleted: false})}
        />
         <TouchableOpacity onPress={() => handleAddTask()}>
           <View style={styles.addWrapper}>
@@ -93,6 +101,14 @@ const styles = StyleSheet.create({
   },
   tasksWrapper: {
     paddingTop: 80,
+    paddingHorizontal: 20,
+  },
+  tasksWrapperDone: {
+    textDecorationLine:"line-through",
+    color:"0dfebf",
+    borderColor:  "ff34ad",
+    paddingTop: 40,
+    backgroundColor: 'red',
     paddingHorizontal: 20,
   },
   sectionTitle: {

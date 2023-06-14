@@ -4,6 +4,7 @@ import { View, Text, StyleSheet } from "react-native";
 export interface PestoTask {
   text: string;
   priority?: number;
+  isCompleted: boolean;
 }
 function Task(props: PestoTask) {
   return (
