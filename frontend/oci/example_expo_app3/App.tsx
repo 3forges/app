@@ -47,7 +47,7 @@ export default function App() {
       >
         {/* Today's Tasks */}
         <View style={styles.tasksWrapper}>
-          <Text style={styles.sectionTitle}>My ToDo List</Text>
+          <Text style={styles.sectionTitle}>My ToDo List Biobob sans internet oh ouiiiiiid</Text>
           <View style={styles.items}>
             {/* This is where the tasks will go! */}
             {taskItems.map((item, index) => {
@@ -73,7 +73,7 @@ export default function App() {
         <TextInput
           style={styles.input}
           placeholder={"Add new item"}
-          value={task?.text || "Default Pesto Taks is to code one hour in react native"}
+          value={task?.text}
           onChangeText={(newText) => setTask({ text: newText})}
        />
         <TouchableOpacity onPress={() => handleAddTask()}>
