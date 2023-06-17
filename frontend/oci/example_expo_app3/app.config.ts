@@ -6,6 +6,12 @@ import { ExpoConfig } from 'expo/config';
 const config: ExpoConfig = {
   name: 'my-app',
   slug: 'my-app',
+  android: {
+    package: 'io.pesto.app'
+  },
+  ios: {
+    bundleIdentifier: 'io.pesto.app'
+  }
 };
 
 export default config;
