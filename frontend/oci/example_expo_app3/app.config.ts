@@ -6,6 +6,13 @@ import { ExpoConfig } from 'expo/config';
 const config: ExpoConfig = {
   name: 'my-app',
   slug: 'my-app',
+  android: {
+    package: "com.bioboosterbob.myapp"
+  },
+  ios: {
+    bundleIdentifier: "com.bioboosterbob.myapp"
+  }
+
 };
 
 export default config;

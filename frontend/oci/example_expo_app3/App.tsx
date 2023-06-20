@@ -1,4 +1,5 @@
 import React from "react";
+import { useRef } from "react";
 import {
   Platform,
   KeyboardAvoidingView,
@@ -14,27 +15,41 @@ import Task, { PestoTask } from "./Task";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 
 export default function App() {
-  const [task, setTask] = React.useState<PestoTask>();
-  const [isCompletedState, setIsCompletedState] = React.useState<boolean>(false);
-  //const [taskItems, setTaskItems] = React.useState([]);
-  // const [taskItems, setTaskItems] = React.useState(0);
+  const [inputTask, setTask] = React.useState<PestoTask>();
+  // isCompleteState to array, au feeling
+  const [isCompletedStates, setisCompletedStates] = React.useState<boolean[]>([false]);
   const [taskItems, setTaskItems] = React.useState<PestoTask[]>([]);
   const defaultPestoTask: PestoTask = {text: "faire le ménage", isCompleted: false}
-  // setTaskItems([defaultPestoTask]);
 
   function handleAddTask() {
     Keyboard.dismiss();
-    // taskItems.push(firstTask);
-    // setTaskItems([...taskItems, task])
-    
-    let editedTask: PestoTask = {text: `${task?.text || defaultPestoTask.text}`, isCompleted: false}
+    let editedTask: PestoTask = {text: `${inputTask?.text || defaultPestoTask.text}`, isCompleted: false}
     setTaskItems(taskItems => [...taskItems, editedTask])
-    setTask(editedTask);
+    //setTask(editedTask);
   }
 
   function completeTask(index: any) {
-    taskItems[index].isCompleted = ! taskItems[index].isCompleted 
-    setIsCompletedState(taskItems[index].isCompleted)
+    // taskItems[index].isCompleted = ! taskItems[index].isCompleted 
+    setTaskItems(taskItems => {
+      taskItems[index].isCompleted = ! taskItems[index].isCompleted 
+      const tmp = [...isCompletedStates]
+      tmp[index] = taskItems[index].isCompleted
+      console.log("test")
+      return taskItems
+    })
+    // setisCompletedStates(isCompletedStates => synchroState(index))
+  }
+
+  function synchroState(index: any) {
+    const tmp = [...isCompletedStates]
+    tmp[index] = taskItems[index].isCompleted
+    /*
+    if (tmp.filter(function (bool) {return bool!=true}).length == 0) { 
+      setTaskItems(taskItems => [])
+      setisCompletedStates(isCompletedStates => [])
+    }
+    */
+    return(tmp)
   }
 
   function deleteTask(index: any) {
@@ -50,21 +65,20 @@ export default function App() {
         contentContainerStyle={{
           flexGrow: 1,
         }}
-        keyboardShouldPersistTaps="handled"
-      >
+        keyboardShouldPersistTaps="handled">
         {/* Today's Tasks */}
         <View style={styles.tasksWrapper}>
-          <Text style={styles.sectionTitle}>My ToDo List Biobob sans internet oh ouiiiiiid</Text>
+          <Text style={styles.sectionTitle}>My ToDo List</Text>
           <View nativeID="VINCENT" id="bobobobo" style={styles.items}>
             {/* This is where the tasks will go! */}
             {taskItems.map((item, index) => {
               return (
                 <TouchableOpacity
-                  key={index}
-                  style={/*taskItems[index].isCompleted*/isCompletedState?styles.tasksWrapper:styles.tasksWrapperDone}
-                  onPress={() => completeTask(index)}
-                >
-                  <Task text={item.text} isCompleted={false} />
+                  key={index} >
+                  <Task 
+                    text={item.text} 
+                    isCompleted={isCompletedStates[index]} 
+                     />
                 </TouchableOpacity>
               );
             })}
@@ -81,7 +95,7 @@ export default function App() {
         <TextInput
           style={styles.input}
           placeholder={"Add new item"}
-          value={task?.text}
+          value={inputTask?.text}
           onChangeText={(newText) => setTask({ text: newText, isCompleted: false})}
        />
         <TouchableOpacity onPress={() => handleAddTask()}>
@@ -102,15 +116,7 @@ const styles = StyleSheet.create({
   tasksWrapper: {
     paddingTop: 80,
     paddingHorizontal: 20,
-  },
-  tasksWrapperDone: {
-    textDecorationLine:"line-through",
-    color:"0dfebf",
-    borderColor:  "ff34ad",
-    paddingTop: 40,
-    backgroundColor: 'red',
-    paddingHorizontal: 20,
-  },
+  }, 
   sectionTitle: {
     fontSize: 24,
     fontWeight: "bold",
