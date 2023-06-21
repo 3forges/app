@@ -1,34 +1,28 @@
 import React from "react";
-//import { useRef } from "react";
-import { View, Text, StyleSheet, StyleProp, ViewStyle } from "react-native";
-
+import { View, Text, StyleSheet, StyleProp, ViewStyle, NativeEventEmitter } from "react-native";
 
 export interface PestoTask {
   text: string;
   priority?: number;
   isCompleted: boolean;
+  index: number;
+  onClick?: Function;
 }
 
 function Task(props: PestoTask) { 
+  console.info(` - Appel de la fonction Task `)
   const [task, setTask] = React.useState<PestoTask>(); 
-  if (task) {
-    
-  }else{
-    setTask(props)
-  }
-  console.info(` - Début - Appel de la fonction Task `)
-    console.log(task)
-    console.info(` - Fin - Appel de la fonction Task `)
-  const  handleOnTaskClick = () => { 
-    setTask({ text: task?.text || "please", isCompleted: !task?.isCompleted});
-    console.info(` - Début - Appel de la fonction [handleOnTaskClick] `)
-    console.log(task)
+
+  const  handleOnTaskClick = (event: any) => { 
+    console.info(` - Début - Appel de la fonction [handleOnTaskClick] `+event)
+    setTask({ text: task?.text || "?no text?", isCompleted: !(task?.isCompleted || false), index: task?.index || 0 });
+    props?.onClick?.(event, task?.index)
     console.info(` - Fin - Appel de la fonction [handleOnTaskClick] `)
-  }
+  } 
   return ( 
-    <View style={!task?.isCompleted?styles.item:styles.itemCompleted} onTouchEnd={handleOnTaskClick} >
+    <View style={!task?.isCompleted?styles.item:styles.itemCompleted} onTouchEnd={(event) => handleOnTaskClick(event)} >
       <View style={styles.itemLeft}>
-        <Text style={styles.item}>{task?.text || "default"}</Text>
+        <Text style={styles.item} onPress={(event) => handleOnTaskClick(event)}>{props?.text || "default"}</Text>
       </View>
     </View>
   );

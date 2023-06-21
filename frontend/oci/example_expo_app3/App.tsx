@@ -16,40 +16,31 @@ import { Colors } from "react-native/Libraries/NewAppScreen";
 
 export default function App() {
   const [inputTask, setTask] = React.useState<PestoTask>();
-  // isCompleteState to array, au feeling
-  const [isCompletedStates, setisCompletedStates] = React.useState<boolean[]>([false]);
   const [taskItems, setTaskItems] = React.useState<PestoTask[]>([]);
-  const defaultPestoTask: PestoTask = {text: "faire le ménage", isCompleted: false}
+  const defaultPestoTask: PestoTask = { text: "faire le ménage", isCompleted: false, index: 0 }
 
   function handleAddTask() {
     Keyboard.dismiss();
-    let editedTask: PestoTask = {text: `${inputTask?.text || defaultPestoTask.text}`, isCompleted: false}
+    let editedTask: PestoTask = { text: `${inputTask?.text || defaultPestoTask.text}`, isCompleted: false, index: taskItems.length }
     setTaskItems(taskItems => [...taskItems, editedTask])
-    //setTask(editedTask);
   }
 
-  function completeTask(index: any) {
-    // taskItems[index].isCompleted = ! taskItems[index].isCompleted 
+  /**
+   * 
+   * @param e: event 
+   * @param i: index for tasks 
+   */
+  function cleanupTaskItems(e: any, i: number) {
+    console.info(` - Début - Appel de la fonction CleanUP ` + i)
     setTaskItems(taskItems => {
-      taskItems[index].isCompleted = ! taskItems[index].isCompleted 
-      const tmp = [...isCompletedStates]
-      tmp[index] = taskItems[index].isCompleted
-      console.log("test")
+      taskItems[i].isCompleted = !taskItems[i].isCompleted
       return taskItems
     })
-    // setisCompletedStates(isCompletedStates => synchroState(index))
-  }
-
-  function synchroState(index: any) {
-    const tmp = [...isCompletedStates]
-    tmp[index] = taskItems[index].isCompleted
-    /*
-    if (tmp.filter(function (bool) {return bool!=true}).length == 0) { 
+    console.log("taskItems undone-filtered length: ", taskItems.filter(function (bool) { return bool.isCompleted != true }).length)
+    if (taskItems.filter((bool) => { return bool.isCompleted != true }).length == 0) {
       setTaskItems(taskItems => [])
-      setisCompletedStates(isCompletedStates => [])
     }
-    */
-    return(tmp)
+    console.info(` - Fin - Appel de la fonction CleanUP `)
   }
 
   function deleteTask(index: any) {
@@ -74,11 +65,13 @@ export default function App() {
             {taskItems.map((item, index) => {
               return (
                 <TouchableOpacity
-                  key={index} >
-                  <Task 
-                    text={item.text} 
-                    isCompleted={isCompletedStates[index]} 
-                     />
+                  key={index}
+                >
+                  <Task
+                    text={item.text}
+                    isCompleted={taskItems[index].isCompleted}
+                    index={index}
+                    onClick={(event: any) => cleanupTaskItems(event, index)} />
                 </TouchableOpacity>
               );
             })}
@@ -96,8 +89,8 @@ export default function App() {
           style={styles.input}
           placeholder={"Add new item"}
           value={inputTask?.text}
-          onChangeText={(newText) => setTask({ text: newText, isCompleted: false})}
-       />
+          onChangeText={(newText) => setTask({ text: newText, isCompleted: false, index: taskItems?.length || 0 })}
+        />
         <TouchableOpacity onPress={() => handleAddTask()}>
           <View style={styles.addWrapper}>
             <Text style={styles.addText}>+</Text>
@@ -116,7 +109,7 @@ const styles = StyleSheet.create({
   tasksWrapper: {
     paddingTop: 80,
     paddingHorizontal: 20,
-  }, 
+  },
   sectionTitle: {
     fontSize: 24,
     fontWeight: "bold",
