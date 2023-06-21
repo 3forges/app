@@ -30,10 +30,10 @@ export default function App() {
    * @param e: event 
    * @param i: index for tasks 
    */
-  function cleanupTaskItems(e: any, i: number) {
-    console.info(` - Début - Appel de la fonction CleanUP ` + i)
+  function cleanupTaskItems(event: any, index: number) {
+    console.info(` - Début - Appel de la fonction CleanUP ` + index)
     setTaskItems(taskItems => {
-      taskItems[i].isCompleted = !taskItems[i].isCompleted
+      taskItems[index].isCompleted = !taskItems[index].isCompleted
       return taskItems
     })
     console.log("taskItems undone-filtered length: ", taskItems.filter(function (bool) { return bool.isCompleted != true }).length)

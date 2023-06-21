@@ -14,8 +14,8 @@ function Task(props: PestoTask) {
   const [task, setTask] = React.useState<PestoTask>(); 
 
   const  handleOnTaskClick = (event: any) => { 
-    console.info(` - Début - Appel de la fonction [handleOnTaskClick] `+event)
-    setTask({ text: task?.text || "?no text?", isCompleted: !(task?.isCompleted || false), index: task?.index || 0 });
+    console.info(` - Début - Appel de la fonction [handleOnTaskClick] index:`+props?.index)
+    setTask({ text: task?.text || "?no text?", isCompleted: !(task?.isCompleted || false), index: props?.index || 0 });
     props?.onClick?.(event, task?.index)
     console.info(` - Fin - Appel de la fonction [handleOnTaskClick] `)
   } 
