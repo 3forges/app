@@ -10,19 +10,19 @@ export interface PestoTask {
 }
 
 function Task(props: PestoTask) { 
-  console.info(` - Appel de la fonction Task `)
+  const debug: boolean = false
+  debug && console.info(` - Début - Appel de la fonction [Task] `)
   const [task, setTask] = React.useState<PestoTask>(); 
-
-  const  handleOnTaskClick = (event: any) => { 
-    console.info(` - Début - Appel de la fonction [handleOnTaskClick] index:`+props?.index)
+  const  handleOnTaskClick = () => { 
+    debug && console.info(` - Début - Appel de la fonction [handleOnTaskClick] index:`+props?.index)
     setTask({ text: task?.text || "?no text?", isCompleted: !(task?.isCompleted || false), index: props?.index || 0 });
-    props?.onClick?.(event, task?.index)
-    console.info(` - Fin - Appel de la fonction [handleOnTaskClick] `)
+    props?.onClick?.(task?.index)
+    debug && console.info(` - Fin - Appel de la fonction [handleOnTaskClick] `)
   } 
   return ( 
-    <View style={!task?.isCompleted?styles.item:styles.itemCompleted} onTouchEnd={(event) => handleOnTaskClick(event)} >
+    <View style={!task?.isCompleted?styles.item:styles.itemCompleted} onTouchEnd={() => handleOnTaskClick()} >
       <View style={styles.itemLeft}>
-        <Text style={styles.item} onPress={(event) => handleOnTaskClick(event)}>{props?.text || "default"}</Text>
+        <Text style={styles.item} onPress={() => handleOnTaskClick()}>{props?.text || "default"}</Text>
       </View>
     </View>
   );
@@ -54,9 +54,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     flexWrap: "wrap",
-  },
-  itemText: {
-    maxWidth: "100%",
   },
 });
 

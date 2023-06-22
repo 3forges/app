@@ -1,5 +1,4 @@
 import React from "react";
-import { useRef } from "react";
 import {
   Platform,
   KeyboardAvoidingView,
@@ -12,11 +11,11 @@ import {
   ScrollView,
 } from "react-native";
 import Task, { PestoTask } from "./Task";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 
 export default function App() {
-  const [inputTask, setTask] = React.useState<PestoTask>();
-  const [taskItems, setTaskItems] = React.useState<PestoTask[]>([]);
+  const debug: boolean = false
+  const [inputTask, setTask] = React.useState<PestoTask>()
+  const [taskItems, setTaskItems] = React.useState<PestoTask[]>([])
   const defaultPestoTask: PestoTask = { text: "faire le ménage", isCompleted: false, index: 0 }
 
   function handleAddTask() {
@@ -25,22 +24,17 @@ export default function App() {
     setTaskItems(taskItems => [...taskItems, editedTask])
   }
 
-  /**
-   * 
-   * @param e: event 
-   * @param i: index for tasks 
-   */
-  function cleanupTaskItems(event: any, index: number) {
-    console.info(` - Début - Appel de la fonction CleanUP ` + index)
+  function cleanupTaskItems(index: number) {
+    debug && console.info(' Debut de la fonction [cleanupTaskItems] ')
     setTaskItems(taskItems => {
       taskItems[index].isCompleted = !taskItems[index].isCompleted
       return taskItems
     })
-    console.log("taskItems undone-filtered length: ", taskItems.filter(function (bool) { return bool.isCompleted != true }).length)
+    debug && console.info("taskItems undone-filtered length: ", taskItems.filter(function (bool) { return bool.isCompleted != true }).length)
     if (taskItems.filter((bool) => { return bool.isCompleted != true }).length == 0) {
       setTaskItems(taskItems => [])
     }
-    console.info(` - Fin - Appel de la fonction CleanUP `)
+    debug && console.info(' Fin de la fonction [cleanupTaskItems] ')
   }
 
   function deleteTask(index: any) {
@@ -60,18 +54,17 @@ export default function App() {
         {/* Today's Tasks */}
         <View style={styles.tasksWrapper}>
           <Text style={styles.sectionTitle}>My ToDo List</Text>
-          <View nativeID="VINCENT" id="bobobobo" style={styles.items}>
+          <View style={styles.items}>
             {/* This is where the tasks will go! */}
             {taskItems.map((item, index) => {
               return (
                 <TouchableOpacity
-                  key={index}
-                >
-                  <Task
-                    text={item.text}
-                    isCompleted={taskItems[index].isCompleted}
-                    index={index}
-                    onClick={(event: any) => cleanupTaskItems(event, index)} />
+                  key={index}>
+                <Task
+                  text={item.text}
+                  isCompleted={taskItems[index].isCompleted}
+                  index={index}
+                  onClick={() => cleanupTaskItems(index)} />
                 </TouchableOpacity>
               );
             })}
