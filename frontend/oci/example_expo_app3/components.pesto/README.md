@@ -1,0 +1,2 @@
+Here in `./components.pesto/` all components developed by the Pesto Team
+In `./components/` all glustack UI compoents : it would be good ot change the path of the base folder in which all gluestack UI clibrary cmponents are installed on your machine

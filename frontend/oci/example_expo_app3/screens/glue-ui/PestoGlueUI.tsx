@@ -7,6 +7,8 @@ import {
   VStack
  } from '../../components';
 import { config } from '../../gluestack-ui.config';
+import PestoMenu from '../../components.pesto/PestoMenu';
+import PestoNavBar from '../../components.pesto/PestoNavBar';
 
 export default function PestoGlueUI() {
   return (
@@ -33,8 +35,12 @@ export default function PestoGlueUI() {
           marginRight: 'auto',
         }} backgroundColor='$green300' justifyContent='center' >
               <Heading style={{
-          backgroundColor: '$pink300'
-        }} >I am a Heading</Heading>
+          backgroundColor: '$pink300',
+          justifyContent: 'center',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+        }} justifyContent='center'  backgroundColor='$pink300' >Pesto</Heading>
+        <PestoNavBar title='The Pesto App'/>
             </Box>
             <Box w='$1000' h='$20' bg='$blue400' > 
             <Center bg="$yellow500" h={'$100'} w={'$100'} padding={'$3'} marginLeft={'auto'} marginRight={'auto'}>
