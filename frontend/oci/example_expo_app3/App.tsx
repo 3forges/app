@@ -1,3 +1,4 @@
+import { StatusBar } from "expo-status-bar"
 import React from "react";
 import {
   Platform,
@@ -13,7 +14,7 @@ import {
 import Task, { PestoTask } from "./Task";
 
 export default function App() {
-  const debug: boolean = false
+  const debug: boolean = true
   const [inputTask, setTask] = React.useState<PestoTask>()
   const [taskItems, setTaskItems] = React.useState<PestoTask[]>([])
   const defaultPestoTask: PestoTask = { text: "faire le ménage", isCompleted: false, index: 0 }
@@ -24,17 +25,18 @@ export default function App() {
     setTaskItems(taskItems => [...taskItems, editedTask])
   }
 
-  function cleanupTaskItems(index: number) {
-    debug && console.info(' Debut de la fonction [cleanupTaskItems] ')
+  function cleanUpTaskItem(index: number) {
+    debug && console.info(' Debut de la fonction [cleanUpTaskItem] ')
     setTaskItems(taskItems => {
       taskItems[index].isCompleted = !taskItems[index].isCompleted
       return taskItems
     })
+    // CLEAN-UP si filter(false) => 0
     debug && console.info("taskItems undone-filtered length: ", taskItems.filter(function (bool) { return bool.isCompleted != true }).length)
-    if (taskItems.filter((bool) => { return bool.isCompleted != true }).length == 0) {
-      setTaskItems(taskItems => [])
+    if (taskItems.filter((bool) => { return bool.isCompleted != true }).length == 0 && taskItems.length > 0) {
+      setTimeout(() => setTaskItems(taskItems => []), 1000)
     }
-    debug && console.info(' Fin de la fonction [cleanupTaskItems] ')
+    debug && console.info(' Fin de la fonction [cleanUpTaskItem] ')
   }
 
   function deleteTask(index: any) {
@@ -46,6 +48,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       {/* Scroll view to enable scrolling when list gets longer than the page */}
+      <StatusBar style="auto" />
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,
@@ -64,7 +67,7 @@ export default function App() {
                   text={item.text}
                   isCompleted={taskItems[index].isCompleted}
                   index={index}
-                  onClick={() => cleanupTaskItems(index)} />
+                  onClick={() => cleanUpTaskItem(index)} />
                 </TouchableOpacity>
               );
             })}

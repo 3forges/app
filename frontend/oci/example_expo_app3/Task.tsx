@@ -1,5 +1,6 @@
-import React from "react";
-import { View, Text, StyleSheet, StyleProp, ViewStyle, NativeEventEmitter } from "react-native";
+import React from "react"
+import { View, Text, StyleSheet, StyleProp, ViewStyle, NativeEventEmitter, Pressable } from "react-native"
+//import { AiOutlineClose } from "react-icons/ai"
 
 export interface PestoTask {
   text: string;
@@ -10,21 +11,26 @@ export interface PestoTask {
 }
 
 function Task(props: PestoTask) { 
-  const debug: boolean = false
+  const debug: boolean = true
   debug && console.info(` - Début - Appel de la fonction [Task] `)
   const [task, setTask] = React.useState<PestoTask>(); 
+
   const  handleOnTaskClick = () => { 
     debug && console.info(` - Début - Appel de la fonction [handleOnTaskClick] index:`+props?.index)
-    setTask({ text: task?.text || "?no text?", isCompleted: !(task?.isCompleted || false), index: props?.index || 0 });
-    props?.onClick?.(task?.index)
+    setTask({ 
+      text: task?.text || "?no text?", 
+      isCompleted: !(task?.isCompleted), 
+      index: task?.index || 0 })
+    props?.onClick?.()
     debug && console.info(` - Fin - Appel de la fonction [handleOnTaskClick] `)
   } 
   return ( 
-    <View style={!task?.isCompleted?styles.item:styles.itemCompleted} onTouchEnd={() => handleOnTaskClick()} >
-      <View style={styles.itemLeft}>
-        <Text style={styles.item} onPress={() => handleOnTaskClick()}>{props?.text || "default"}</Text>
-      </View>
-    </View>
+    <View style={!task?.isCompleted?styles.item:styles.itemCompleted}>
+      <Pressable style={styles.itemLeft} onPress={() => handleOnTaskClick()} >
+        <Text style={styles.item}>{props?.text || "default"}</Text>
+      </Pressable>
+      {/*<AiOutlineClose/>*/}
+     </View>
   );
 }
 /*
