@@ -17,11 +17,11 @@ export default function App() {
   const debug: boolean = true
   const [inputTask, setTask] = React.useState<PestoTask>()
   const [taskItems, setTaskItems] = React.useState<PestoTask[]>([])
-  const defaultPestoTask: PestoTask = { text: "faire le ménage", isCompleted: false, index: 0 }
+  const defaultPestoTask: PestoTask = { text: "faire le ménage", isCompleted: false, index: 0, onClick: () => {} }
 
   function handleAddTask() {
     Keyboard.dismiss();
-    let editedTask: PestoTask = { text: `${inputTask?.text || defaultPestoTask.text}`, isCompleted: false, index: taskItems.length }
+    let editedTask: PestoTask = { text: `${inputTask?.text || defaultPestoTask.text}`, isCompleted: false, index: taskItems.length, onClick: () => {} }
     setTaskItems(taskItems => [...taskItems, editedTask])
   }
 
@@ -85,7 +85,7 @@ export default function App() {
           style={styles.input}
           placeholder={"Add new item"}
           value={inputTask?.text}
-          onChangeText={(newText) => setTask({ text: newText, isCompleted: false, index: taskItems?.length || 0 })}
+          onChangeText={(newText) => setTask({ text: newText, isCompleted: false, index: taskItems?.length || 0, onClick: () => {} })}
         />
         <TouchableOpacity onPress={() => handleAddTask()}>
           <View style={styles.addWrapper}>

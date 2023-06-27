@@ -1,6 +1,7 @@
 import React from "react"
 import { View, Text, StyleSheet, StyleProp, ViewStyle, NativeEventEmitter, Pressable } from "react-native"
-//import { AiOutlineClose } from "react-icons/ai"
+import Icon from 'react-native-vector-icons/AntDesign';
+
 
 export interface PestoTask {
   text: string;
@@ -24,12 +25,29 @@ function Task(props: PestoTask) {
     props?.onClick?.()
     debug && console.info(` - Fin - Appel de la fonction [handleOnTaskClick] `)
   } 
+  const myButton = (
+    <Icon.Button
+      name="delete"
+      backgroundColor="#3b5998"
+      onPress={handleOnTaskClick}
+    >
+      Del
+    </Icon.Button>
+  );
+  
+  const customTextButton = (
+    <Icon.Button name="facebook" backgroundColor="#3b5998">
+      <Text style={{ fontFamily: 'Arial', fontSize: 15 }}>
+        Login with Facebook
+      </Text>
+    </Icon.Button>
+  );
   return ( 
     <View style={!task?.isCompleted?styles.item:styles.itemCompleted}>
       <Pressable style={styles.itemLeft} onPress={() => handleOnTaskClick()} >
         <Text style={styles.item}>{props?.text || "default"}</Text>
+        {myButton}
       </Pressable>
-      {/*<AiOutlineClose/>*/}
      </View>
   );
 }
