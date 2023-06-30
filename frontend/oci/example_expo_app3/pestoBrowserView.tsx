@@ -31,7 +31,7 @@ export default function pestoBrowserView(props: any) {
 
   function handleClick(index: number, action: string) {
     console.log('click action: '+action+' index: '+index)
-    //if (action == "delete") deleteTask(index)
+    if (action == "delete") deleteTask(index)
     if (action == "deleteModal") setModalVisible(true)
     props?.onClick?.(action)
   }
