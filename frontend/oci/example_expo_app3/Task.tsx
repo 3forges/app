@@ -1,13 +1,11 @@
 import React from "react"
-import { View, Text, StyleSheet, StyleProp, ViewStyle, NativeEventEmitter, Pressable } from "react-native"
-import Icon from 'react-native-vector-icons/AntDesign';
-
+import { View, Text, StyleSheet, StyleProp, ViewStyle, NativeEventEmitter, Pressable, Image } from "react-native"
+// import Icon from 'react-native-vector-icons/AntDesign';
 
 export interface PestoTask {
   text: string;
   priority?: number;
-  isCompleted: boolean;
-  index: number;
+  index?: number;
   onClick?: Function;
 }
 
@@ -16,69 +14,84 @@ function Task(props: PestoTask) {
   debug && console.info(` - Début - Appel de la fonction [Task] `)
   const [task, setTask] = React.useState<PestoTask>(); 
 
-  const  handleOnTaskClick = () => { 
-    debug && console.info(` - Début - Appel de la fonction [handleOnTaskClick] index:`+props?.index)
-    setTask({ 
-      text: task?.text || "?no text?", 
-      isCompleted: !(task?.isCompleted), 
-      index: task?.index || 0 })
-    props?.onClick?.()
-    debug && console.info(` - Fin - Appel de la fonction [handleOnTaskClick] `)
-  } 
-  const myButton = (
-    <Icon.Button
-      name="delete"
-      backgroundColor="#3b5998"
-      onPress={handleOnTaskClick}
-    >
-      Del
-    </Icon.Button>
-  );
-  
-  const customTextButton = (
-    <Icon.Button name="facebook" backgroundColor="#3b5998">
-      <Text style={{ fontFamily: 'Arial', fontSize: 15 }}>
-        Login with Facebook
-      </Text>
-    </Icon.Button>
-  );
+  const  handleOnTaskClick = (action: string) => { 
+    console.log('task: '+action)
+    props?.onClick?.(action)
+  }   
+
   return ( 
-    <View style={!task?.isCompleted?styles.item:styles.itemCompleted}>
-      <Pressable style={styles.itemLeft} onPress={() => handleOnTaskClick()} >
-        <Text style={styles.item}>{props?.text || "default"}</Text>
-        {myButton}
-      </Pressable>
+    <View style={styles.container}>
+      <Text style={styles.text}>{props?.text || "default"}</Text>
+      <View style={styles.buttons}>
+        <Pressable onPress={() => handleOnTaskClick('editor')} >
+          <Image
+              style={{
+                  resizeMode: 'contain',
+                  height: 20,
+                  width: 20,
+                  marginRight: 5,
+              }}
+              source={require('./assets/edit.png')}
+          />
+        </Pressable>
+        <Pressable onPress={() => handleOnTaskClick('deleteModal')} >
+          <Image
+              style={{
+                  resizeMode: 'contain',
+                  height: 20,
+                  width: 20,
+                  marginRight: 5,
+              }}
+              source={require('./assets/delete.png')}
+          />
+        </Pressable>
+      </View>
      </View>
   );
 }
-/*
+
 function updTask(props: PestoTask) {
 
 }
-*/
+
+function delTask(props: PestoTask) {
+  
+}
+
 const styles = StyleSheet.create({
-  itemCompleted: {
-    backgroundColor: "red",
-    padding: 5,
+  container: {
+    position: "relative",
     flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 5,
-    textDecorationLine: "line-through",
-  },
-  item: {
+
+    width: "90%",
+    flex: 1,
+    margin: 5,
+    color: '#535353', 
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'space-evenly', 
+    borderWidth: 2,
+    borderColor: "#000", 
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 20,
+  }, 
+  text: {
     backgroundColor: "#FFF",
     padding: 5,
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 5,
-    textDecorationLine: "none"
+    textDecorationLine: "none",
+    flex: 0.9,
   },
-  itemLeft: {
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    flexWrap: "wrap",
-  },
+  buttons: {
+      alignItems: "flex-end",
+      justifyContent: 'space-between',
+      paddingHorizontal: 10,
+      flexDirection: "row",
+      flex: 0.1,
+      marginHorizontal: 25,
+  }
 });
 
 export default Task;
