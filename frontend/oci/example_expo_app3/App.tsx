@@ -4,8 +4,15 @@ import {
   StyleSheet,
   View,
   Text, 
-  Pressable, 
+  Pressable
 } from "react-native";
+
+import { withExpoSnack } from 'nativewind';
+import { styled } from 'nativewind';
+const StyledView = styled(View)
+const StyledText = styled(Text)
+const StyledPressable = styled(Pressable)
+
 import PestoBrowserView from "./pestoBrowserView";
 import PestoEditor from "./pestoEditor"
 
@@ -13,66 +20,34 @@ export default function App() {
   const debug: boolean = true
   const [page, setPage] = React.useState<string>('browser')
   
-  function handleClick(action: string) {
+  function navigate(action: string) {
     console.log('app: click '+action)
     if (action == 'editor') setPage('editor')
-    if (action == 'back') setPage('browser')
+    if (action == 'projects') setPage('browser')
   }
 
-  if ( page == "browser")
-    return (
-      <View style={styles.container}>
-        {/* Scroll view to enable scrolling when list gets longer than the page */}
-        <StatusBar style="auto" />
-        <PestoBrowserView onClick={(action: string) => {handleClick(action)}}></PestoBrowserView>
-      </View>
-    );
-  if ( page == "editor")
-    return (
-      <View style={styles.container}>
-        {/* Scroll view to enable scrolling when list gets longer than the page */}
-        <StatusBar style="auto" />
-        <PestoEditor onClick={(cmd: string) => handleClick(cmd)}></PestoEditor>
-      </View>
-    )
+  return (
+  <StyledView className="mx-auto flex-1 items-center bg-gray-500 justify-center space-y-10">
+    <StyledText className="text-xl text-white">Welcome to Home</StyledText>
+    <StyledText className="bg-green-300 border-green-600 border-b p-4 m-4 rounded">
+      Hello World
+    </StyledText>
+  <StyledView className="flex flex-row space-x-5">
+      <StyledPressable onPress={() => navigate("projects")}>
+        <StyledText className="text-lg text-black bg-white rounded-md px-4 py-2">
+          Projects
+        </StyledText>
+      </StyledPressable>
+      <StyledPressable onPress={() => navigate("editor")}>
+        <StyledText className="text-lg text-black bg-white rounded-md px-4 py-2">
+          Editor
+        </StyledText>
+      </StyledPressable>
+    </StyledView>
+  </StyledView>
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#E5E5E5",
-  },
-  tasksWrapper: {
-    paddingTop: 80,
-    paddingHorizontal: 20,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  items: {
-    marginTop: 30,
-  },
-  writeTaskWrapper: {
-    position: "absolute",
-    bottom: 60,
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-  },
-  input: {
-    paddingVertical: 15,
-    paddingHorizontal: 15,
-    backgroundColor: "#FFF",
-    width: 250,
-  },
-  addWrapper: {
-    width: 60,
-    height: 60,
-    backgroundColor: "#FFF",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  addText: {},
-});
+
+
+
