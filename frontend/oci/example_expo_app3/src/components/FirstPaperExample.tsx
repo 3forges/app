@@ -1,7 +1,6 @@
 import React from "react"
 import { View, Text, StyleSheet, StyleProp, ViewStyle, NativeEventEmitter, Pressable, Image } from "react-native"
-import { IconButton } from "react-native-paper";
-import Icon from 'react-native-vector-icons/AntDesign';
+// import Icon from 'react-native-vector-icons/AntDesign';
 
 export interface PestoTask {
   text: string;
@@ -25,12 +24,26 @@ function Task(props: PestoTask) {
       <Text style={styles.text}>{props?.text || "default"}</Text>
       <View style={styles.buttons}>
         <Pressable onPress={() => handleOnTaskClick('editor')} >
-        <IconButton name="EditOutlined"></IconButton>
-        <Icon name="EditOutlined"></Icon>
-
+          <Image
+              style={{
+                  resizeMode: 'contain',
+                  height: 20,
+                  width: 20,
+                  marginRight: 5,
+              }}
+              source={require('./assets/edit.png')}
+          />
         </Pressable>
         <Pressable onPress={() => handleOnTaskClick('deleteModal')} >
-
+          <Image
+              style={{
+                  resizeMode: 'contain',
+                  height: 20,
+                  width: 20,
+                  marginRight: 5,
+              }}
+              source={require('./assets/delete.png')}
+          />
         </Pressable>
       </View>
      </View>

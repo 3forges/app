@@ -1,49 +1,47 @@
 import React from "react"
 import { View, Text, StyleSheet, StyleProp, ViewStyle, NativeEventEmitter, Pressable, Image } from "react-native"
-import { IconButton } from "react-native-paper";
 import Icon from 'react-native-vector-icons/AntDesign';
 
-export interface PestoTask {
+import { Button } from 'react-native-paper'
+import { Colors } from "react-native/Libraries/NewAppScreen";
+
+// import { SafeAreaView} from 'react-native';
+import { SafeAreaView} from 'react-native-safe-area-context';
+
+import PestoFlatList from "../components/PestoFlatList";'./src/components/PestoFlatList'
+
+
+import { useTheme } from 'react-native-paper';
+/*
+export default function PaymentScreen() {
+  const theme = useTheme();
+
+  return <View style={{ backgroundColor: theme.colors.primary }} />;
+}
+*/
+export interface PestoAppProps {
   text: string;
   priority?: number;
   index?: number;
   onClick?: Function;
 }
 
-function Task(props: PestoTask) { 
+function PestoApp(props: PestoAppProps) { 
+  const theme = useTheme();
   const debug: boolean = true
-  debug && console.info(` - Début - Appel de la fonction [Task] `)
-  const [task, setTask] = React.useState<PestoTask>(); 
+  debug && console.info(` - Début - Appel de la fonction [PestoApp] `)
+  const [currentView, setCurrentView] = React.useState<PestoAppProps>(); 
 
-  const  handleOnTaskClick = (action: string) => { 
-    console.log('task: '+action)
+  const  handleOnNavigateClick = (action: string) => { 
+    console.log('currentView: '+action)
     props?.onClick?.(action)
   }   
 
   return ( 
-    <View style={styles.container}>
-      <Text style={styles.text}>{props?.text || "default"}</Text>
-      <View style={styles.buttons}>
-        <Pressable onPress={() => handleOnTaskClick('editor')} >
-        <IconButton name="EditOutlined"></IconButton>
-        <Icon name="EditOutlined"></Icon>
-
-        </Pressable>
-        <Pressable onPress={() => handleOnTaskClick('deleteModal')} >
-
-        </Pressable>
-      </View>
-     </View>
+    <PestoFlatList/>
   );
 }
 
-function updTask(props: PestoTask) {
-
-}
-
-function delTask(props: PestoTask) {
-  
-}
 
 const styles = StyleSheet.create({
   container: {
@@ -81,4 +79,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Task;
+export default PestoApp;
