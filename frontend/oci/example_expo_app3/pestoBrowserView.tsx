@@ -19,7 +19,7 @@ export default function pestoBrowserView(props: any) {
   const debug: boolean = true
   const [inputTask, setTask] = React.useState<PestoTask>()
   const [taskItems, setTaskItems] = React.useState<PestoTask[]>([])
-  const [modalVisible, setModalVisible] = React.useState<boolean>(false)
+  const [modalVisible, setModalVisible] = React.useState<boolean[]>([false])
 
   const defaultPestoTask: PestoTask = { text: "faire le ménage", index: 0, onClick: () => {} }
 
@@ -27,13 +27,20 @@ export default function pestoBrowserView(props: any) {
     Keyboard.dismiss();
     let editedTask: PestoTask = { text: `${inputTask?.text || defaultPestoTask.text}`, index: taskItems.length, onClick: () => {} }
     setTaskItems(taskItems => [...taskItems, editedTask])
+    modalUpdate(taskItems.length, false)
   }
 
   function handleClick(index: number, action: string) {
     console.log('click action: '+action+' index: '+index)
     if (action == "delete") deleteTask(index)
-    if (action == "deleteModal") setModalVisible(true)
+    if (action == "deleteModal") modalUpdate(index, true)
     props?.onClick?.(action)
+  }
+
+  function modalUpdate(index: number, bool: boolean) {
+    const visible = [...modalVisible]
+    visible[index] = bool;
+    setModalVisible(visible)
   }
 
   function updateTask(index: any, retask: PestoTask) {
@@ -66,19 +73,19 @@ export default function pestoBrowserView(props: any) {
                 <Modal
                     animationType="slide"
                     transparent={true}
-                    visible={modalVisible}
+                    visible={modalVisible[index]}
                     onRequestClose={() => {
-                        setModalVisible(!modalVisible);
+                        modalUpdate(index, false);
                     }}>
                     <View style={styles.modalView}>
                         <Text>Voulez vous supprimer #{index} ?</Text>
                         <Pressable onPress={() => {
                             handleClick(index, 'delete')
-                            setModalVisible(!modalVisible)
+                            modalUpdate(index, false)
                         }}>
                         <Text>oui</Text>
                         </Pressable>
-                        <Pressable onPress={() => setModalVisible(!modalVisible)}>
+                        <Pressable onPress={() => modalUpdate(index, false)}>
                             <Text>non</Text>
                         </Pressable>
                     </View>
@@ -104,7 +111,7 @@ export default function pestoBrowserView(props: any) {
         <TextInput
           style={styles.input}
           placeholder={"Add new item"}
-          value={inputTask?.text}
+          value={inputTask?.text || ''}
           onChangeText={(newText) => setTask({ text: newText, index: taskItems?.length || 0, onClick: () => {} })}
         />
         <TouchableOpacity onPress={() => handleAddTask()}>
