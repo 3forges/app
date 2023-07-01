@@ -9,14 +9,23 @@
   },
   "dependencies": {
     "@expo/metro-config": "^0.7.1",
+    "@tamagui/animations-react-native": "^1.36.6",
+    "@tamagui/babel-plugin": "^1.36.6",
+    "@tamagui/config": "^1.36.6",
+    "@tamagui/font-inter": "^1.36.6",
+    "@tamagui/theme-base": "^1.36.6",
+    "babel-plugin-transform-inline-environment-variables": "^0.4.4",
     "expo": "~48.0.18",
+    "expo-font": "^11.1.1",
     "expo-splash-screen": "~0.18.2",
     "expo-status-bar": "~1.4.4",
     "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react-dom": "^18.2.0",
     "react-native": "0.71.8",
+    "react-native-reanimated": "~2.14.4",
     "react-native-vector-icons": "^9.2.0",
-    "react-native-web": "~0.18.10"
+    "react-native-web": "^0.19.6",
+    "tamagui": "^1.36.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
