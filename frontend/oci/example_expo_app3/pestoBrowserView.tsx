@@ -15,17 +15,34 @@ import {
 } from "react-native";
 import Task, { PestoTask } from "./Task";
 
+// better dev-mode
+let defaultPestoTask: PestoTask[] = [
+  { text: "faire le ménage", index: 0, onClick: () => {} }, 
+  { text: "finir pesto", index: 0, onClick: () => {} }, 
+  { text: "prendre une box", index: 0, onClick: () => {} }, 
+  { text: "reflechir", index: 0, onClick: () => {} }, 
+  { text: "reflechir encore", index: 0, onClick: () => {} }, 
+  { text: "refuse ! resist !", index: 0, onClick: () => {} }, 
+  { text: "chanter", index: 0, onClick: () => {} }, 
+  { text: "danser", index: 0, onClick: () => {} }, 
+]
+
 export default function pestoBrowserView(props: any) {
   const debug: boolean = true
   const [inputTask, setTask] = React.useState<PestoTask>()
   const [taskItems, setTaskItems] = React.useState<PestoTask[]>([])
   const [modalVisible, setModalVisible] = React.useState<boolean[]>([false])
 
-  const defaultPestoTask: PestoTask = { text: "faire le ménage", index: 0, onClick: () => {} }
+  function randomPesto() {
+    const rnd = Math.floor(Math.random()*defaultPestoTask.length)
+    const text = ((defaultPestoTask.length > 0)?defaultPestoTask[rnd].text:"default")
+    if (defaultPestoTask.length > 0) defaultPestoTask.splice(rnd, 1)
+    return(text)
+  }
 
   function handleAddTask() {
     Keyboard.dismiss();
-    let editedTask: PestoTask = { text: `${inputTask?.text || defaultPestoTask.text}`, index: taskItems.length, onClick: () => {} }
+    let editedTask: PestoTask = { text: `${inputTask?.text || randomPesto()}`, index: taskItems.length, onClick: () => {} }
     setTaskItems(taskItems => [...taskItems, editedTask])
     modalUpdate(taskItems.length, false)
   }
@@ -78,7 +95,7 @@ export default function pestoBrowserView(props: any) {
                         modalUpdate(index, false);
                     }}>
                     <View style={styles.modalView}>
-                        <Text>Voulez vous supprimer #{index} ?</Text>
+                        <Text>Voulez vous supprimer #{taskItems[index].text} ?</Text>
                         <Pressable onPress={() => {
                             handleClick(index, 'delete')
                             modalUpdate(index, false)
@@ -93,8 +110,7 @@ export default function pestoBrowserView(props: any) {
                 <Task
                   text={item.text}
                   index={index}
-                  onClick={(action: string) => handleClick(index, action)} 
-                  />
+                  onClick={(action: string) => handleClick(index, action)} />
                 </TouchableOpacity>
               );
             })}
@@ -106,12 +122,11 @@ export default function pestoBrowserView(props: any) {
       {/* Uses a keyboard avoiding view which ensures the keyboard does not cover the items on screen */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.writeTaskWrapper}
-      >
+        style={styles.writeTaskWrapper} >
         <TextInput
           style={styles.input}
-          placeholder={"Add new item"}
-          value={inputTask?.text || ''}
+          placeholder={"random task"}
+          value={inputTask?.text || ""}
           onChangeText={(newText) => setTask({ text: newText, index: taskItems?.length || 0, onClick: () => {} })}
         />
         <TouchableOpacity onPress={() => handleAddTask()}>
