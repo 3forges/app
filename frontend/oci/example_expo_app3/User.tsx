@@ -1,18 +1,15 @@
 import React from "react"
 import { View, Text, StyleSheet, StyleProp, ViewStyle, NativeEventEmitter, Pressable, Image } from "react-native"
 
-export interface PestoTask {
-  text: string;
-  priority?: number;
+export interface PestoUser {
+  name: string;
+  picture: string;
   index?: number;
   onClick?: Function;
 }
 
-function Task(props: PestoTask) { 
-  const debug: boolean = true
-  debug && console.info(` - Début - Appel de la fonction [Task] `)
-  const [task, setTask] = React.useState<PestoTask>(); 
-
+function User(props: PestoUser) { 
+  const [task, setUser] = React.useState<PestoUser>(); 
   const  handleOnTaskClick = (action: string) => { 
     console.log('task: '+action)
     props?.onClick?.(action)
@@ -20,7 +17,18 @@ function Task(props: PestoTask) {
 
   return ( 
     <View style={styles.container}>
-      <Text style={styles.text}>{props?.text || "default"}</Text>
+      <View style={styles.user}>
+        <Image 
+            style={{
+                resizeMode: 'contain',
+                height: 20,
+                width: 20,
+                marginRight: 5,
+            }}
+            source={{uri: props?.picture}}
+        />
+        <Text style={styles.text}>{props?.name || "default"}</Text>
+      </View>
       <View style={styles.buttons}>
         <Pressable onPress={() => handleOnTaskClick('editor')} >
           <Image
@@ -49,14 +57,6 @@ function Task(props: PestoTask) {
   );
 }
 
-function updTask(props: PestoTask) {
-
-}
-
-function delTask(props: PestoTask) {
-  
-}
-
 const styles = StyleSheet.create({
   container: {
     position: "relative",
@@ -73,6 +73,14 @@ const styles = StyleSheet.create({
     borderColor: "#000", 
     borderTopRightRadius: 20,
     borderBottomRightRadius: 20,
+  }, 
+  user: {
+    alignItems: "flex-end",
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    flexDirection: "row",
+    flex: 0.9,
+    marginHorizontal: 25,
   }, 
   text: {
     backgroundColor: "#FFF",
@@ -93,4 +101,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Task;
+export default User;

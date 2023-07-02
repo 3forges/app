@@ -6,13 +6,28 @@ import {
   Text, 
   Pressable, 
 } from "react-native";
-import PestoBrowserView from "./pestoBrowserView";
+import PestoUserBrowserView from "./pestoUserBrowserView";
 import PestoEditor from "./pestoEditor"
+ /*
+const [data, setData] = React.useState([]);
+async function randomUser() {   
+  React.useEffect(() => {
+    fetch('https://randomuser.me/api/?results=1')
+      .then(res => res.json())
+      .then(data => setData(data));
+  }, []);
+  console.log(data)
+}
+await randomUser()
+*/
 
 export default function App() {
   const debug: boolean = true
   const [page, setPage] = React.useState<string>('browser')
   
+  
+  //await randomUser()
+
   function handleClick(action: string) {
     console.log('app: click '+action)
     if (action == 'editor') setPage('editor')
@@ -24,7 +39,7 @@ export default function App() {
       <View style={styles.container}>
         {/* Scroll view to enable scrolling when list gets longer than the page */}
         <StatusBar style="auto" />
-        <PestoBrowserView onClick={(action: string) => {handleClick(action)}}></PestoBrowserView>
+        <PestoUserBrowserView onClick={(action: string) => {handleClick(action)}} promisedata={''}></PestoUserBrowserView>
       </View>
     );
   if ( page == "editor")
