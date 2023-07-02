@@ -18,7 +18,7 @@ return (
         <StatusBar  />
         <Appbar.Header>
             <Appbar.BackAction onPress={() => {}} />
-            <Appbar.Content title="Title" />
+            <Appbar.Content title={props.title} />
             <Appbar.Action icon="calendar" onPress={() => {}} />
             <Appbar.Action icon="magnify" onPress={() => {}} />
         </Appbar.Header>
