@@ -23,7 +23,7 @@ function User(props: PestoUser) {
                 resizeMode: 'contain',
                 height: 20,
                 width: 20,
-                marginRight: 5,
+                top: -5
             }}
             source={{uri: props?.picture}}
         />

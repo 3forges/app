@@ -16,7 +16,6 @@ import {
 } from "react-native";
 import User, { PestoUser } from "./User";
 
-
 export default function pestoBrowserView(props: any) {
   const debug: boolean = true
   const [inputTask, setTask] = React.useState<PestoUser>()
@@ -27,13 +26,14 @@ export default function pestoBrowserView(props: any) {
   async function randomUserAsync() {   
     let url = 'https://randomuser.me/api/'
     let arg = '?results=1'
-    let response = await fetch(url)
+    let response = await fetch(url+arg)
     setData(await response.json())
   }
   if (data.length == 0) {
     randomUserAsync()
   } else {
     console.log("fetched user", data.results[0]);
+  }
     /*
     data.results[0].map((json) =>{
       let editedTask: PestoUser = { name: `${json.name.first}`, picture: "", index: userItems.length, onClick: () => {} }
@@ -44,8 +44,17 @@ export default function pestoBrowserView(props: any) {
 
 
   function handleAddUser() {
-    // Keyboard.dismiss();
-    let editedTask: PestoUser = { name: `${data.results[0].name.first}`, picture: `${data.results[0].picture.thumbnail}`, index: userItems.length, onClick: () => {} }
+    Keyboard.dismiss();
+    let userName: string
+    let picture: string
+    if (inputTask) {
+      userName = inputTask.name
+      picture = inputTask.picture
+    }else{
+      userName = data.results[0].name.first
+      picture = data.results[0].picture.thumbnail
+    }
+    let editedTask: PestoUser = { name: userName, picture: picture, index: userItems.length, onClick: () => {} }
     setUserItems(userItems => [...userItems, editedTask])
     console.log('new user: ', editedTask)
     modalUpdate(userItems.length, false)
@@ -75,7 +84,7 @@ export default function pestoBrowserView(props: any) {
     setUserItems(itemsCopy);
   }
 
-  return (
+  if (data.length != 0) {return (
     <View style={styles.container}>
       {/* Scroll view to enable scrolling when list gets longer than the page */}
       <ScrollView
@@ -89,7 +98,7 @@ export default function pestoBrowserView(props: any) {
           <View style={styles.items}>
             {/* This is where the tasks will go! */}
             {userItems.map((item, index) => {
-              console.log(index, item)
+              //console.log(index, item)
               return (
                 <TouchableOpacity
                   key={index}>
@@ -141,9 +150,9 @@ export default function pestoBrowserView(props: any) {
         />
         <TextInput
           style={styles.input}
-          placeholder={data?.results[0]?.name.last || ''}
-          value={data?.results[0]?.name.last || ''}
-          onChangeText={(newName) => setTask({ name: newName, picture: "", index: userItems?.length || 0, onClick: () => {} })}
+          placeholder="add user ..."
+          value={data?.results[0]?.name.first || ''}
+          onChangeText={ (newName, newPicture=data?.results[0]?.picture.thumbnail) => {setTask({ name: newName, picture: newPicture, index: userItems?.length || 0, onClick: () => {} })}}
         />
         <TouchableOpacity onPress={() => handleAddUser()}>
           <View style={styles.addWrapper}>
@@ -199,7 +208,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 15,
     backgroundColor: "#FFF",
-    width: 250,
+    width: 150,
   },
   addWrapper: {
     width: 60,
