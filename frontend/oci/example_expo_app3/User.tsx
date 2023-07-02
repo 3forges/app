@@ -9,9 +9,9 @@ export interface PestoUser {
 }
 
 function User(props: PestoUser) { 
-  const [task, setUser] = React.useState<PestoUser>(); 
-  const  handleOnTaskClick = (action: string) => { 
-    console.log('task: '+action)
+  const [user, setUser] = React.useState<PestoUser>(); 
+  const  handleOnUserClick = (action: string) => { 
+    console.log('user: '+action)
     props?.onClick?.(action)
   }   
 
@@ -30,7 +30,7 @@ function User(props: PestoUser) {
         <Text style={styles.text}>{props?.name || "default"}</Text>
       </View>
       <View style={styles.buttons}>
-        <Pressable onPress={() => handleOnTaskClick('editor')} >
+        <Pressable onPress={() => handleOnUserClick('editor')} >
           <Image
               style={{
                   resizeMode: 'contain',
@@ -41,7 +41,7 @@ function User(props: PestoUser) {
               source={require('./assets/edit.png')}
           />
         </Pressable>
-        <Pressable onPress={() => handleOnTaskClick('deleteModal')} >
+        <Pressable onPress={() => handleOnUserClick('deleteModal')} >
           <Image
               style={{
                   resizeMode: 'contain',
@@ -61,7 +61,6 @@ const styles = StyleSheet.create({
   container: {
     position: "relative",
     flexDirection: "row",
-
     width: "90%",
     flex: 1,
     margin: 5,

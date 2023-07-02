@@ -28,9 +28,9 @@ export default function pestoBrowserView(props: any) {
   const [modalVisible, setModalVisible] = React.useState<boolean[]>([false])
 
   // Fecth randomuser api
-  function randomUserAsync() {   
+  function randomUserAsync(arg: string) {   
     let url = 'https://randomuser.me/api/'
-    let arg = '?results=1'
+    //let arg = '?results=1'
     fetch(url+arg).then(
       fetchData => fetchData.json().then(
         fetchData => setUser({
@@ -45,11 +45,11 @@ export default function pestoBrowserView(props: any) {
 
   function handleAddUser() {
     Keyboard.dismiss();
-    let editedTask: PestoUser = { name: inputUser.name, picture: inputUser.picture, index: userItems.length, onClick: () => {} }
-    setUserItems(userItems => [...userItems, editedTask])
-    console.log('new user: ', editedTask)
+    let editedUser: PestoUser = { name: inputUser.name, picture: inputUser.picture, index: userItems.length, onClick: () => {} }
+    setUserItems(userItems => [...userItems, editedUser])
+    console.log('new user: ', editedUser)
     modalUpdate(userItems.length, false)
-    randomUserAsync()
+    randomUserAsync('?results=1')
   }
 
   function handleClick(index: number, action: string) {
@@ -65,7 +65,7 @@ export default function pestoBrowserView(props: any) {
     setModalVisible(visible)
   }
 
-  function updateUser(index: any, retask: PestoUser) {
+  function updateUser(index: any, reuser: PestoUser) {
 
   }
 
@@ -75,7 +75,7 @@ export default function pestoBrowserView(props: any) {
     setUserItems(itemsCopy);
   }
 
-  if (inputUser.name == 'add user' ) randomUserAsync()
+  if (inputUser.name == 'add user' ) randomUserAsync('?results=1')
 
   return (
     <View style={styles.container}>
@@ -89,7 +89,7 @@ export default function pestoBrowserView(props: any) {
         <View style={styles.userWrapper}>
           <Text style={styles.sectionTitle}>User List</Text>
           <View style={styles.items}>
-            {/* This is where the tasks will go! */}
+            {/* This is where the users will go! */}
             {userItems.map((item, index) => {
               return (
                 <TouchableOpacity
