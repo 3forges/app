@@ -2,14 +2,13 @@ import React from "react"
 import { View, Text, StyleSheet, StyleProp, ViewStyle, NativeEventEmitter, Pressable, Image } from "react-native"
 import Icon from 'react-native-vector-icons/AntDesign';
 
-import { Button } from 'react-native-paper'
-import { Colors } from "react-native/Libraries/NewAppScreen";
+// import { Button } from 'react-native-paper'
+// import { Colors } from "react-native/Libraries/NewAppScreen";
 
-// import { SafeAreaView} from 'react-native';
-import { SafeAreaView} from 'react-native-safe-area-context';
+// // import { SafeAreaView} from 'react-native';
+// import { SafeAreaView} from 'react-native-safe-area-context';
 
-import PestoFlatList from "../components/PestoFlatList";'./src/components/PestoFlatList'
-
+import PestoFlatList from "../components/PestoFlatList";
 
 import { useTheme } from 'react-native-paper';
 /*
@@ -27,7 +26,7 @@ export interface PestoAppProps {
 }
 
 function PestoApp(props: PestoAppProps) { 
-  const theme = useTheme();
+  const pestoTheme = useTheme();
   const debug: boolean = true
   debug && console.info(` - Début - Appel de la fonction [PestoApp] `)
   const [currentView, setCurrentView] = React.useState<PestoAppProps>(); 
@@ -38,7 +37,7 @@ function PestoApp(props: PestoAppProps) {
   }   
 
   return ( 
-    <PestoFlatList/>
+    <PestoFlatList theme={pestoTheme}/>
   );
 }
 

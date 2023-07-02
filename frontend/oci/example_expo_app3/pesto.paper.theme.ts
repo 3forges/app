@@ -8,7 +8,8 @@ export const mainPestoTheme ={
 colors: {
     ...MD3DarkTheme.colors,
     primary: 'green',
-    secondary: 'orange',
+    // secondary: 'orange',
+    secondary: '#ff8001',
 },
 };
   

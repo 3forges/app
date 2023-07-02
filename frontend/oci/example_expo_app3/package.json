@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@expo/metro-config": "^0.7.1",
+    "@react-native-masked-view/masked-view": "^0.2.9",
     "expo": "~48.0.18",
     "expo-splash-screen": "~0.18.2",
     "expo-status-bar": "~1.4.4",
