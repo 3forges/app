@@ -18,42 +18,25 @@ import User, { PestoUser } from "./User";
 
 export default function pestoBrowserView(props: any) {
   const debug: boolean = true
-  const [inputTask, setTask] = React.useState<PestoUser>()
+  const [inputUser, setUser] = React.useState<PestoUser>()
   const [userItems, setUserItems] = React.useState<PestoUser[]>([])
   const [modalVisible, setModalVisible] = React.useState<boolean[]>([false])
   const [data, setData] = React.useState([]);
 
+  // Fecth randomuser api
   async function randomUserAsync() {   
     let url = 'https://randomuser.me/api/'
     let arg = '?results=1'
     let response = await fetch(url+arg)
     setData(await response.json())
   }
-  if (data.length == 0) {
-    randomUserAsync()
-  } else {
-    console.log("fetched user", data.results[0]);
-  }
-    /*
-    data.results[0].map((json) =>{
-      let editedTask: PestoUser = { name: `${json.name.first}`, picture: "", index: userItems.length, onClick: () => {} }
-      setUserItems(userItems => [...userItems, editedTask])
-    })
-    */
-  //}
-
 
   function handleAddUser() {
     Keyboard.dismiss();
-    let userName: string
-    let picture: string
-    if (inputTask) {
-      userName = inputTask.name
-      picture = inputTask.picture
-    }else{
-      userName = data.results[0].name.first
-      picture = data.results[0].picture.thumbnail
-    }
+    // Handle no update on inputUser
+    let userName: string = ((inputUser)?inputUser.name:data.results[0].name.first)
+    let picture: string = ((inputUser)?inputUser.picture:data.results[0].picture.thumbnail)
+
     let editedTask: PestoUser = { name: userName, picture: picture, index: userItems.length, onClick: () => {} }
     setUserItems(userItems => [...userItems, editedTask])
     console.log('new user: ', editedTask)
@@ -84,6 +67,12 @@ export default function pestoBrowserView(props: any) {
     setUserItems(itemsCopy);
   }
 
+  // Affreuse bidouille en attendant le redux | usememo() | brain upgrade
+  // => ce qui fait que l'appli se redessine d'bord vide (blink effect)
+  if (data.length == 0) {
+    randomUserAsync()
+  }
+  
   if (data.length != 0) {return (
     <View style={styles.container}>
       {/* Scroll view to enable scrolling when list gets longer than the page */}
@@ -93,12 +82,11 @@ export default function pestoBrowserView(props: any) {
         }}
         keyboardShouldPersistTaps="handled">
         {/* Users list */}
-        <View style={styles.tasksWrapper}>
+        <View style={styles.userWrapper}>
           <Text style={styles.sectionTitle}>User List</Text>
           <View style={styles.items}>
             {/* This is where the tasks will go! */}
             {userItems.map((item, index) => {
-              //console.log(index, item)
               return (
                 <TouchableOpacity
                   key={index}>
@@ -138,7 +126,7 @@ export default function pestoBrowserView(props: any) {
       {/* Uses a keyboard avoiding view which ensures the keyboard does not cover the items on screen */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.writeTaskWrapper} >
+        style={styles.writeUserWrapper} >
           <Image 
             style={{
                 resizeMode: 'contain',
@@ -152,10 +140,10 @@ export default function pestoBrowserView(props: any) {
           style={styles.input}
           placeholder="add user ..."
           value={data?.results[0]?.name.first || ''}
-          onChangeText={ (newName, newPicture=data?.results[0]?.picture.thumbnail) => {setTask({ name: newName, picture: newPicture, index: userItems?.length || 0, onClick: () => {} })}}
+          onChangeText={ (newName, newPicture=data?.results[0]?.picture.thumbnail) => {setUser({ name: newName, picture: newPicture, index: userItems?.length || 0, onClick: () => {} })}}
         />
         <TouchableOpacity onPress={() => handleAddUser()}>
-          <View style={styles.addWrapper}>
+          <View style={styles.addUser}>
             <Text style={styles.addText}>+</Text>
           </View>
         </TouchableOpacity>
@@ -184,7 +172,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#E5E5E5",
   },
-  tasksWrapper: {
+  userWrapper: {
     paddingTop: 80,
     paddingHorizontal: 20,
   },
@@ -195,7 +183,7 @@ const styles = StyleSheet.create({
   items: {
     marginTop: 30,
   },
-  writeTaskWrapper: {
+  writeUserWrapper: {
     position: "absolute",
     bottom: 60,
     width: "100%",
@@ -210,7 +198,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     width: 150,
   },
-  addWrapper: {
+  addUser: {
     width: 60,
     height: 60,
     marginHorizontal: 20,
