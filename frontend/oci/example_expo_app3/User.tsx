@@ -21,9 +21,9 @@ function User(props: PestoUser) {
         <Image 
             style={{
                 resizeMode: 'contain',
-                height: 20,
-                width: 20,
-                top: -5
+                height: 30,
+                width: 30,
+                top: -1
             }}
             source={{uri: props?.picture}}
         />

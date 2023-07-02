@@ -18,30 +18,38 @@ import User, { PestoUser } from "./User";
 
 export default function pestoBrowserView(props: any) {
   const debug: boolean = true
-  const [inputUser, setUser] = React.useState<PestoUser>()
+  const [inputUser, setUser] = React.useState<PestoUser>({
+    name: 'add user',
+    picture: 'https://randomuser.me/api/portraits/thumb/men/1.jpg', 
+    onClick: () => {}, 
+    index: 0
+  })
   const [userItems, setUserItems] = React.useState<PestoUser[]>([])
   const [modalVisible, setModalVisible] = React.useState<boolean[]>([false])
-  const [data, setData] = React.useState([]);
 
   // Fecth randomuser api
-  async function randomUserAsync() {   
+  function randomUserAsync() {   
     let url = 'https://randomuser.me/api/'
     let arg = '?results=1'
-    let response = await fetch(url+arg)
-    setData(await response.json())
+    fetch(url+arg).then(
+      fetchData => fetchData.json().then(
+        fetchData => setUser({
+          name: fetchData.results[0].name.title+' '+fetchData.results[0].name.first+' '+fetchData.results[0].name.last,
+          picture: fetchData.results[0].picture.thumbnail,
+          onClick: () => {},
+          index: userItems.length
+        })
+      )
+    )   
   }
 
   function handleAddUser() {
     Keyboard.dismiss();
-    // Handle no update on inputUser
-    let userName: string = ((inputUser)?inputUser.name:data.results[0].name.first)
-    let picture: string = ((inputUser)?inputUser.picture:data.results[0].picture.thumbnail)
-
-    let editedTask: PestoUser = { name: userName, picture: picture, index: userItems.length, onClick: () => {} }
+    let editedTask: PestoUser = { name: inputUser.name, picture: inputUser.picture, index: userItems.length, onClick: () => {} }
     setUserItems(userItems => [...userItems, editedTask])
     console.log('new user: ', editedTask)
     modalUpdate(userItems.length, false)
-    setData([])
+    randomUserAsync()
   }
 
   function handleClick(index: number, action: string) {
@@ -61,19 +69,15 @@ export default function pestoBrowserView(props: any) {
 
   }
 
-  function deleteUser(index: any) {
+  function deleteUser(index: number) {
     let itemsCopy = [...userItems];
     itemsCopy.splice(index, 1);
     setUserItems(itemsCopy);
   }
 
-  // Affreuse bidouille en attendant le redux | usememo() | brain upgrade
-  // => ce qui fait que l'appli se redessine d'bord vide (blink effect)
-  if (data.length == 0) {
-    randomUserAsync()
-  }
-  
-  if (data.length != 0) {return (
+  if (inputUser.name == 'add user' ) randomUserAsync()
+
+  return (
     <View style={styles.container}>
       {/* Scroll view to enable scrolling when list gets longer than the page */}
       <ScrollView
@@ -134,13 +138,13 @@ export default function pestoBrowserView(props: any) {
                 width: 40,
                 marginRight: 5,
             }}
-            source={{uri: data?.results[0]?.picture.thumbnail || ''}}
+            source={{uri: inputUser.picture }}
         />
         <TextInput
           style={styles.input}
           placeholder="add user ..."
-          value={data?.results[0]?.name.first || ''}
-          onChangeText={ (newName, newPicture=data?.results[0]?.picture.thumbnail) => {setUser({ name: newName, picture: newPicture, index: userItems?.length || 0, onClick: () => {} })}}
+          value={inputUser.name}
+          onChangeText={ (newName, newPicture=inputUser.picture) => {setUser({ name: newName, picture: newPicture, index: userItems?.length || 0, onClick: () => {} })}}
         />
         <TouchableOpacity onPress={() => handleAddUser()}>
           <View style={styles.addUser}>
@@ -150,7 +154,7 @@ export default function pestoBrowserView(props: any) {
       </KeyboardAvoidingView>
     </View>
   );
-}}
+}
 
 const styles = StyleSheet.create({
   modalView: {
@@ -193,10 +197,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   input: {
-    paddingVertical: 15,
+    paddingVertical: 7,
     paddingHorizontal: 15,
     backgroundColor: "#FFF",
-    width: 150,
+    width: 200,
   },
   addUser: {
     width: 60,
