@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
+import { StatusBar } from  "expo-status-bar"
 import { Appbar, FAB, useTheme } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -13,12 +14,15 @@ interface PestoAppBarProps {
 const PestoTopBar = (props: PestoAppBarProps) => {
     console.log(` >> PestoTopBar`)
 return (
-  <Appbar.Header>
-    <Appbar.BackAction onPress={() => {}} />
-    <Appbar.Content title="Title" />
-    <Appbar.Action icon="calendar" onPress={() => {}} />
-    <Appbar.Action icon="magnify" onPress={() => {}} />
-  </Appbar.Header>
+    <>
+        <StatusBar  />
+        <Appbar.Header>
+            <Appbar.BackAction onPress={() => {}} />
+            <Appbar.Content title="Title" />
+            <Appbar.Action icon="calendar" onPress={() => {}} />
+            <Appbar.Action icon="magnify" onPress={() => {}} />
+        </Appbar.Header>
+    </>
 )
 };
 
