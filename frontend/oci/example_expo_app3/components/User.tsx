@@ -11,7 +11,6 @@ export interface PestoUser {
 function User(props: PestoUser) { 
   const [user, setUser] = React.useState<PestoUser>(); 
   const  handleOnUserClick = (action: string) => { 
-    console.log('user: '+action)
     props?.onClick?.(action)
   }   
 
@@ -25,8 +24,7 @@ function User(props: PestoUser) {
                 width: 30,
                 top: -1
             }}
-            source={{uri: props?.picture}}
-        />
+            source={{uri: props?.picture}} />
         <Text style={styles.text}>{props?.name || "default"}</Text>
       </View>
       <View style={styles.buttons}>
@@ -38,8 +36,7 @@ function User(props: PestoUser) {
                   width: 20,
                   marginRight: 5,
               }}
-              source={require('./assets/edit.png')}
-          />
+              source={require('../assets/edit.png')} />
         </Pressable>
         <Pressable onPress={() => handleOnUserClick('deleteModal')} >
           <Image
@@ -49,8 +46,7 @@ function User(props: PestoUser) {
                   width: 20,
                   marginRight: 5,
               }}
-              source={require('./assets/delete.png')}
-          />
+              source={require('../assets/delete.png')} />
         </Pressable>
       </View>
      </View>
@@ -91,12 +87,12 @@ const styles = StyleSheet.create({
     flex: 0.9,
   },
   buttons: {
-      alignItems: "flex-end",
-      justifyContent: 'space-between',
-      paddingHorizontal: 10,
-      flexDirection: "row",
-      flex: 0.1,
-      marginHorizontal: 25,
+    alignItems: "flex-end",
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    flexDirection: "row",
+    flex: 0.1,
+    marginHorizontal: 25,
   }
 });
 

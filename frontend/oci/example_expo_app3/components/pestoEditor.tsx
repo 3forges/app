@@ -13,10 +13,13 @@ import {
   Button, 
   Pressable, 
 } from "react-native";
-import Task, { PestoTask } from "./Task";
+import { PestoUser } from "./User";
 
-export default function pestoEditor(props: any) {
-    function handleClick() {
+
+export default function PestoEditor(props: any) {
+  const [userItems, setUserItems] = React.useState<PestoUser[]>([])
+
+  function handleClick() {
       props?.onClick?.('back')
     }
 

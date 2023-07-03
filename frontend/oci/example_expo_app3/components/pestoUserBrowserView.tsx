@@ -10,36 +10,43 @@ import {
   Keyboard,
   ScrollView, 
   Modal, 
-  Button, 
   Pressable,
   Image, 
 } from "react-native";
 import User, { PestoUser } from "./User";
 
-export default function pestoBrowserView(props: any) {
+export default function PestoBrowserView(props: any) {
   const debug: boolean = true
+  const [userItems, setUserItems] = React.useState<PestoUser[]>([])
+  const [modalVisible, setModalVisible] = React.useState<boolean[]>([false])
   const [inputUser, setUser] = React.useState<PestoUser>({
     name: 'add user',
     picture: 'https://randomuser.me/api/portraits/thumb/men/1.jpg', 
     onClick: () => {}, 
     index: 0
   })
-  const [userItems, setUserItems] = React.useState<PestoUser[]>([])
-  const [modalVisible, setModalVisible] = React.useState<boolean[]>([false])
 
   // Fecth randomuser api
-  function randomUserAsync(arg: string) {   
-    let url = 'https://randomuser.me/api/'
-    //let arg = '?results=1'
+  function randomUserAsync(arg: number) {   
+    let url = 'https://randomuser.me/api/?results='
     fetch(url+arg).then(
       fetchData => fetchData.json().then(
-        fetchData => setUser({
-          name: fetchData.results[0].name.title+' '+fetchData.results[0].name.first+' '+fetchData.results[0].name.last,
-          picture: fetchData.results[0].picture.thumbnail,
-          onClick: () => {},
-          index: userItems.length
-        })
-      )
+        fetchData => fetchData.results.map((result: any, index: number) => {
+          if (index +1 < arg) {
+            setUserItems(userItems => [...userItems, {
+              name: result.name.title+' '+result.name.first+' '+result.name.last,
+              picture: result.picture.thumbnail,
+              onClick: () => {},
+              index: index
+            }])
+            modalUpdate(userItems.length, false)
+          }else setUser({
+            name: result.name.title+' '+result.name.first+' '+result.name.last,
+            picture: result.picture.thumbnail,
+            onClick: () => {},
+            index: index
+          })
+      }))
     )   
   }
 
@@ -49,11 +56,10 @@ export default function pestoBrowserView(props: any) {
     setUserItems(userItems => [...userItems, editedUser])
     console.log('new user: ', editedUser)
     modalUpdate(userItems.length, false)
-    randomUserAsync('?results=1')
+    randomUserAsync(1)
   }
 
   function handleClick(index: number, action: string) {
-    console.log('click action: '+action+' index: '+index)
     if (action == "delete") deleteUser(index)
     if (action == "deleteModal") modalUpdate(index, true)
     props?.onClick?.(action)
@@ -75,7 +81,7 @@ export default function pestoBrowserView(props: any) {
     setUserItems(itemsCopy);
   }
 
-  if (inputUser.name == 'add user' ) randomUserAsync('?results=1')
+  if (inputUser.name == 'add user' ) randomUserAsync(1)
 
   return (
     <View style={styles.container}>
