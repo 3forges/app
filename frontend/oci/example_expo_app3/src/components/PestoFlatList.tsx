@@ -5,11 +5,12 @@ import {
   StyleSheet,
   Text,
   StatusBar,
+  Pressable
 } from 'react-native';
 // import { SafeAreaView} from 'react-native';
 import { SafeAreaView} from 'react-native-safe-area-context';
 
-import { MD3DarkTheme, MD3Theme, useTheme } from 'react-native-paper';
+import { MD3DarkTheme, MD3Theme, useTheme, Badge, IconButton } from 'react-native-paper';
 import PestoMaskedView from './PestoMaskedView'; './PestoMaskedView'
 import PestoTopBar, { PestoBottomBar } from './../../src/components/PestoBar'
 
@@ -31,17 +32,51 @@ const DATA = [
     title: 'Third Item',
   },
 ];
+import PestoCard from './PestoCard';
 
 // type ItemProps = {title: string, bernard: boolean;};
 export interface ItemProps {title: string, bernard: boolean; michel: number;};
-
+const pesto_card_cover_uri = 'https://images.unsplash.com/photo-1545156521-77bd85671d30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=880&q=80'
 const Item = ({bernard, title}: ItemProps) => {
     const mainThemedStyles = getThemedStyles();
   return (<View style={mainThemedStyles.item}>
     <Text style={mainThemedStyles.title}>{bernard?title:'montiel'}</Text>
     <Text style={mainThemedStyles.container}>valeur de Bernard : [{`${bernard}`}]</Text>
+    <PestoCard title={`${title}`} cover_uri='' content='la description de ce produit, un voyage ?'></PestoCard>
   </View>);
 };
+
+export interface PressableBadgeProps {
+    text: string;
+}
+const PressableBadge = (props: PressableBadgeProps) => {
+    const  handleOnBadgePress = (action: string) => { 
+        console.log('handleOnBadgePress action: '+action)
+      }   
+    return (
+        <Pressable onPress={() => handleOnBadgePress(`super badge ${props.text}`)} >
+        <Badge  theme={{ colors: { primary: 'green', secondary: 'orange', error: 'cyan' } }} >{props.text}</Badge>
+        </Pressable>
+    )
+}
+
+export interface PressableIconBtnProps {
+    text: string;
+}
+const PressableIconBtn = (props: PressableIconBtnProps) => {
+    const  handleOnIconBtnPress = (action: string) => { 
+        console.log('handleOnIconBtnPress action: '+action)
+      }   
+    return (
+        <Pressable onPress={() => handleOnIconBtnPress('editor')} >
+        <IconButton mode={'contained'} animated={true}  theme={{ colors: { primary: 'green', secondary: 'orange', error: 'cyan' } }} icon="file-edit-outline"></IconButton>
+        
+
+        </Pressable>
+    )
+}
+
+
 
 const PestoFlatList = ( props: PestoFlatListProps) => {
     const mainThemedStyles = getThemedStyles();
@@ -50,6 +85,11 @@ const PestoFlatList = ( props: PestoFlatListProps) => {
             <PestoTopBar title='Pesto Top Bar'></PestoTopBar>
 <PestoBottomBar title='Pesto Bottom Bar'></PestoBottomBar>
         <PestoMaskedView text='The Pesto Masked Text'></PestoMaskedView>
+        
+        <PressableBadge text="Pesto Badge" ></PressableBadge>
+        <PressableIconBtn text="Pesto Pressable Icon Btn"></PressableIconBtn>
+
+
         <FlatList
             data={DATA}
             renderItem={({item}) => <Item title={item.title} bernard michel={0.23} />}
