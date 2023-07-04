@@ -22,27 +22,32 @@ const DATA = [
   {
     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
     title: 'First Item',
+    picsum_id: 134
   },
   {
     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
     title: 'Second Item',
+    picsum_id: 197
   },
   {
     id: '58694a0f-3da1-471f-bd96-145571e29d72',
     title: 'Third Item',
+    picsum_id: 145
   },
 ];
 import PestoCard from './PestoCard';
 
 // type ItemProps = {title: string, bernard: boolean;};
-export interface ItemProps {title: string, bernard: boolean; michel: number;};
-const pesto_card_cover_uri = 'https://images.unsplash.com/photo-1545156521-77bd85671d30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=880&q=80'
-const Item = ({bernard, title}: ItemProps) => {
+export interface ItemProps {id: string, title: string, bernard: boolean; michel: number; picsum_id: number};
+// const pesto_card_cover_uri = 'https://images.unsplash.com/photo-1545156521-77bd85671d30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=880&q=80'
+// const pesto_card_cover_uri = 'https://picsum.photos/600/200'
+
+const Item = ({id, bernard, title, picsum_id}: ItemProps) => {
     const mainThemedStyles = getThemedStyles();
   return (<View style={mainThemedStyles.item}>
     <Text style={mainThemedStyles.title}>{bernard?title:'montiel'}</Text>
     <Text style={mainThemedStyles.container}>valeur de Bernard : [{`${bernard}`}]</Text>
-    <PestoCard title={`${title}`} cover_uri='' content='la description de ce produit, un voyage ?'></PestoCard>
+    <PestoCard title={`${title}`} cover_uri={`https://picsum.photos/id/${picsum_id}/600/200`} content='la description de ce produit, un voyage ?'></PestoCard>
   </View>);
 };
 
@@ -92,7 +97,7 @@ const PestoFlatList = ( props: PestoFlatListProps) => {
 
         <FlatList
             data={DATA}
-            renderItem={({item}) => <Item title={item.title} bernard michel={0.23} />}
+            renderItem={({item}) => <Item title={item.title} bernard michel={0.23} picsum_id={item.picsum_id} id={item.id} />}
             keyExtractor={item => item.id}
         />
         </SafeAreaView>
