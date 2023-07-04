@@ -3,6 +3,10 @@
   "compilerOptions": {
     "strict": true,
     "lib": ["DOM", "ESNext"],
-    "target": "ESNext" //"target": "ESNext"
+    "target": "ESNext", //"target": "ESNext";
+    "paths": {
+      "react": ["./node_modules/@types/react"]
+    }
   }
+  
 }

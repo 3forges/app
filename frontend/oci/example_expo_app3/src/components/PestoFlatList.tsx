@@ -11,7 +11,6 @@ import {
 import { SafeAreaView} from 'react-native-safe-area-context';
 
 import { MD3DarkTheme, MD3Theme, useTheme, Badge, IconButton } from 'react-native-paper';
-import PestoMaskedView from './PestoMaskedView'; './PestoMaskedView'
 import PestoTopBar, { PestoBottomBar } from './../../src/components/PestoBar'
 
 export interface PestoFlatListProps {
@@ -89,7 +88,6 @@ const PestoFlatList = ( props: PestoFlatListProps) => {
         <SafeAreaView style={mainThemedStyles.container} >
             <PestoTopBar title='Pesto Top Bar'></PestoTopBar>
 <PestoBottomBar title='Pesto Bottom Bar'></PestoBottomBar>
-        <PestoMaskedView text='The Pesto Masked Text'></PestoMaskedView>
         
         <PressableBadge text="Pesto Badge" ></PressableBadge>
         <PressableIconBtn text="Pesto Pressable Icon Btn"></PressableIconBtn>
