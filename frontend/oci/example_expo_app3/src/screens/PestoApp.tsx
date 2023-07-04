@@ -1,16 +1,19 @@
 import React from "react"
 import { View, Text, StyleSheet, StyleProp, ViewStyle, NativeEventEmitter, Pressable, Image } from "react-native"
 import Icon from 'react-native-vector-icons/AntDesign';
-
+import { useTheme } from 'react-native-paper';
 // import { Button } from 'react-native-paper'
 // import { Colors } from "react-native/Libraries/NewAppScreen";
 
 // // import { SafeAreaView} from 'react-native';
 // import { SafeAreaView} from 'react-native-safe-area-context';
 
+// import PestoNavigationPOC from '../components/drawer/PestoNavigationPOC'
+import PestoNavigationPOC from '../components/drawer/PestoNavigationPOC'
+import PestoDrawer from '../components/drawer/PestoDrawer'
+
 import PestoFlatList from "../components/PestoFlatList";
 
-import { useTheme } from 'react-native-paper';
 /*
 export default function PaymentScreen() {
   const theme = useTheme();
@@ -37,10 +40,26 @@ function PestoApp(props: PestoAppProps) {
   }   
 
   return ( 
-    <PestoFlatList theme={pestoTheme}/>
+    
+    <PestoDrawer></PestoDrawer>
   );
 }
 
+const PestoNavigationPOCComponent = (pros: any) => {
+  const pestoTheme = useTheme();
+  return (
+    <>
+    <PestoNavigationPOC theme={pestoTheme}/>
+    </>
+  )
+}
+
+const FlatListScreen = (props: any) => {
+  const pestoTheme = useTheme();
+  return ( 
+    <PestoFlatList theme={pestoTheme}/>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
