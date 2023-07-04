@@ -7,6 +7,7 @@ import {
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
+import PestoCamera from './../camera/PestoCamera'
 /**
  * 
  * see https://reactnavigation.org/docs/drawer-actions/
@@ -58,6 +59,14 @@ function CustomDrawerContent(props: any) {
     </DrawerContentScrollView>
   );
 }
+function CameraScreen() {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <PestoCamera />
+      
+    </View>
+  );
+}
 
 const Drawer = createDrawerNavigator();
 
@@ -70,6 +79,7 @@ export default function PestoDrawer() {
       >
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Profile" component={ProfileScreen} />
+        <Drawer.Screen name="Camera" component={CameraScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
