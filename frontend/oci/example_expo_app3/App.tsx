@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import PestoUserBrowserView from "./components/pestoUserBrowserView";
 import PestoEditor from "./components/pestoEditor"
+import { Provider } from "react-redux";
+import { store } from "./store";
 
 export default function App() {
   const debug: boolean = true
@@ -20,17 +22,21 @@ export default function App() {
 
   if ( page == "browser")
     return (
-      <View style={styles.container}>
-        <StatusBar style="auto" />
-        <PestoUserBrowserView onClick={(action: string) => {handleClick(action)}}></PestoUserBrowserView>
-      </View>
+      <Provider store={store}>
+        <View style={styles.container}>
+          <StatusBar style="auto" />
+          <PestoUserBrowserView onClick={(action: string) => {handleClick(action)}}></PestoUserBrowserView>
+        </View>
+      </Provider>
     );
   if ( page == "editor")
     return (
-      <View style={styles.container}>
-        <StatusBar style="auto" />
-        <PestoEditor onClick={(cmd: string) => handleClick(cmd)}></PestoEditor>
-      </View>
+      <Provider store={store}>
+        <View style={styles.container}>
+          <StatusBar style="auto" />
+          <PestoEditor onClick={(cmd: string) => handleClick(cmd)}></PestoEditor>
+        </View>
+      </Provider>
     )
 }
 
