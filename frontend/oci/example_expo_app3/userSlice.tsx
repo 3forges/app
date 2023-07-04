@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-//import User, { PestoUser } from "./components/User";
 
 const initialState: any = {
 	userRedux: userSlice, value: [],
@@ -12,7 +11,17 @@ export const userSlice = createSlice({
 		setUsers: (state, item) => {
 			state.value = [...state.value, item.payload];
 		},
-	},
+	}, 
+});
+
+export const inputUserSlice = createSlice({
+	name: "inputUserRedux",
+	initialState,
+	reducers: {
+		setInputUser: (state, item) => {
+			state.value = [item.payload];
+		},
+	}, 
 });
 
 // Action creators are automatically generated for each case reducer function 

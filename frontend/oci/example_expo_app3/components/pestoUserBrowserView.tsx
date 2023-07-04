@@ -47,22 +47,6 @@ export default function PestoBrowserView(props: any) {
     fetch(url).then(
       fetchData => fetchData.json().then(
         fetchData => fetchData.results.map((result: any, index: number) => {
-          /*
-          if (index +1 < arg) {
-            setUserItems(userItems => [...userItems, {
-              name: result.name.title+' '+result.name.first+' '+result.name.last,
-              picture: result.picture.thumbnail,
-              onClick: () => {},
-              index: index
-            }])
-            modalUpdate(userItems.length, false)
-          }else
-          dispatch(setUsers({
-            name: result.name.title+' '+result.name.first+' '+result.name.last,
-            picture: result.picture.thumbnail,
-            onClick: () => {},
-            index: index
-          }))*/
           setUser({
             name: result.name.title+' '+result.name.first+' '+result.name.last,
             picture: result.picture.thumbnail,
@@ -77,12 +61,8 @@ export default function PestoBrowserView(props: any) {
   function handleAddUser() {
     Keyboard.dismiss();
     let editedUser: PestoUser = { name: inputUser.name, picture: inputUser.picture, index: userItems.length, onClick: () => {} }
-    
-    // setUserItems(userItems => [...userItems, editedUser])
     dispatch(setUsers(editedUser))
-
     console.log('new user: ', editedUser)
-    modalUpdate(userItems.length, false)
     randomUserAsync(1)
   }
 
@@ -103,10 +83,8 @@ export default function PestoBrowserView(props: any) {
   }
 
   function deleteUser(index: number) {
-    let itemsCopy = [...userItems];
+    let itemsCopy = userRedux
     itemsCopy.splice(index, 1);
-
-    // setUserItems(itemsCopy);
     dispatch(setUsers(itemsCopy))
   }
 
@@ -114,7 +92,6 @@ export default function PestoBrowserView(props: any) {
     console.log(fetching)
     setFetching(true)
     randomUserAsync(1)
-    // console.log(userRedux)
   }
   console.log(userRedux)
   return (
@@ -139,7 +116,7 @@ export default function PestoBrowserView(props: any) {
                 <Modal
                     animationType="slide"
                     transparent={true}
-                    visible={modalVisible[index]}
+                    visible={modalVisible[index] || false}
                     onRequestClose={() => {
                         modalUpdate(index, false);
                     }}>
