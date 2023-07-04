@@ -49,7 +49,7 @@ const PestoNavigationPOCComponent = (pros: any) => {
   const pestoTheme = useTheme();
   return (
     <>
-    <PestoNavigationPOC theme={pestoTheme}/>
+      <PestoNavigationPOC theme={pestoTheme}/>
     </>
   )
 }
