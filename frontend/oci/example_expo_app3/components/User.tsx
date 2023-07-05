@@ -3,13 +3,13 @@ import { View, Text, StyleSheet, StyleProp, ViewStyle, NativeEventEmitter, Press
 
 export interface PestoUser {
   name: string;
-  picture: string;
   index?: number;
   onClick?: Function;
 }
 
 function User(props: PestoUser) { 
   const [user, setUser] = React.useState<PestoUser>(); 
+  const [page, setPage] = React.useState<string>()
   const  handleOnUserClick = (action: string) => { 
     props?.onClick?.(action)
   }   
@@ -17,14 +17,6 @@ function User(props: PestoUser) {
   return ( 
     <View style={styles.container}>
       <View style={styles.user}>
-        <Image 
-            style={{
-                resizeMode: 'contain',
-                height: 30,
-                width: 30,
-                top: -1
-            }}
-            source={{uri: props?.picture}} />
         <Text style={styles.text}>{props?.name || "default"}</Text>
       </View>
       <View style={styles.buttons}>
@@ -38,7 +30,7 @@ function User(props: PestoUser) {
               }}
               source={require('../assets/edit.png')} />
         </Pressable>
-        <Pressable onPress={() => handleOnUserClick('deleteModal')} >
+        <Pressable onPress={() => handleOnUserClick('showModal')} >
           <Image
               style={{
                   resizeMode: 'contain',

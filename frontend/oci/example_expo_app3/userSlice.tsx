@@ -4,22 +4,12 @@ const initialState: any = {
 	userRedux: userSlice, value: [],
 };
 
-export const userSlice = createSlice({
+export const userSlice: any = createSlice({
 	name: "userRedux",
 	initialState,
 	reducers: {
 		setUsers: (state, item) => {
 			state.value = [...state.value, item.payload];
-		},
-	}, 
-});
-
-export const inputUserSlice = createSlice({
-	name: "inputUserRedux",
-	initialState,
-	reducers: {
-		setInputUser: (state, item) => {
-			state.value = [item.payload];
 		},
 	}, 
 });

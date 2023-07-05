@@ -17,58 +17,31 @@ import User, { PestoUser } from "./User";
 // REDUX
 import { useDispatch, useSelector } from "react-redux";
 import { setUsers } from "../userSlice";
-import { createSlice } from "@reduxjs/toolkit";
 
 export default function PestoBrowserView(props: any) {
   const debug: boolean = true
   // REDUX
-  // const userItems = useSelector((state: any) => state.users.value); //reading the state 
-  // const inputUser = useSelector((state: any) => state.users.value)
-  // const modalVisible = useSelector((state: boolean) => state.modal.value)
   const userRedux = useSelector((state: any) => state.userRedux.value) // Reading the state
   const dispatch = useDispatch();
 
   const [userItems, setUserItems] = React.useState<PestoUser[]>([])
   const [modalVisible, setModalVisible] = React.useState<boolean[]>([false])
-  
   const [inputUser, setUser] = React.useState<PestoUser>({
     name: 'add user',
-    picture: 'https://randomuser.me/api/portraits/thumb/men/1.jpg', 
     onClick: () => {}, 
     index: 0
   })
 
-  const [fetching, setFetching] = React.useState<boolean>(false)
-  
-  
-  // Fecth randomuser api
-  function randomUserAsync(arg: number) {   
-    let url = 'https://randomuser.me/api/?results=1'
-    fetch(url).then(
-      fetchData => fetchData.json().then(
-        fetchData => fetchData.results.map((result: any, index: number) => {
-          setUser({
-            name: result.name.title+' '+result.name.first+' '+result.name.last,
-            picture: result.picture.thumbnail,
-            onClick: () => {},
-            index: index
-          })
-      }))
-    )   
-  }
-  
-
   function handleAddUser() {
     Keyboard.dismiss();
-    let editedUser: PestoUser = { name: inputUser.name, picture: inputUser.picture, index: userItems.length, onClick: () => {} }
+    let editedUser: PestoUser = { name: inputUser.name, index: userItems.length, onClick: () => {} }
     dispatch(setUsers(editedUser))
     console.log('new user: ', editedUser)
-    randomUserAsync(1)
   }
 
   function handleClick(index: number, action: string) {
     if (action == "delete") deleteUser(index)
-    if (action == "deleteModal") modalUpdate(index, true)
+    if (action == "showModal") modalUpdate(index, true)
     props?.onClick?.(action)
   }
 
@@ -78,22 +51,13 @@ export default function PestoBrowserView(props: any) {
     setModalVisible(visible)
   }
 
-  function updateUser(index: any, reuser: PestoUser) {
-
-  }
-
   function deleteUser(index: number) {
     let itemsCopy = userRedux
     itemsCopy.splice(index, 1);
     dispatch(setUsers(itemsCopy))
   }
 
-  if (inputUser.name == 'add user' && fetching == false) { 
-    console.log(fetching)
-    setFetching(true)
-    randomUserAsync(1)
-  }
-  console.log(userRedux)
+  console.log("userRedux : ",userRedux)
   return (
     <View style={styles.container}>
       {/* Scroll view to enable scrolling when list gets longer than the page */}
@@ -107,9 +71,7 @@ export default function PestoBrowserView(props: any) {
           <Text style={styles.sectionTitle}>User List</Text>
           <View style={styles.items}>
             {/* This is where the users will go! */}
-            {
-            //userItems.map((item: any, index: number) => {
-              userRedux.map((item: any, index: number) => {
+            { userRedux.map((item: any, index: number) => {
               return (
                 <TouchableOpacity
                   key={index}>
@@ -136,7 +98,6 @@ export default function PestoBrowserView(props: any) {
                 <User
                   name={item.name}
                   index={index}
-                  picture={item.picture}
                   onClick={(action: string) => handleClick(index, action)} />
                 </TouchableOpacity>
               );
@@ -150,20 +111,11 @@ export default function PestoBrowserView(props: any) {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.writeUserWrapper} >
-          <Image 
-            style={{
-                resizeMode: 'contain',
-                height: 40,
-                width: 40,
-                marginRight: 5,
-            }}
-            source={{uri: inputUser.picture }}
-        />
-        <TextInput
+             <TextInput
           style={styles.input}
           placeholder="add user ..."
           value={inputUser.name}
-          onChangeText={ (newName, newPicture=inputUser.picture) => {setUser({ name: newName, picture: newPicture, index: userRedux?.length || 0, onClick: () => {} })}}
+          onChangeText={ (newName) => {setUser({ name: newName, index: userRedux?.length || 0, onClick: () => {} })}}
         />
         <TouchableOpacity onPress={() => handleAddUser()}>
           <View style={styles.addUser}>
