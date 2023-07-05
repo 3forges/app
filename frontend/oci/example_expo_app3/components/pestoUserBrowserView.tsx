@@ -26,11 +26,12 @@ export default function PestoBrowserView(props: any) {
 
   const [userItems, setUserItems] = React.useState<PestoUser[]>([])
   const [modalVisible, setModalVisible] = React.useState<boolean[]>([false])
-  const [inputUser, setUser] = React.useState<PestoUser>({
+  const [inputUser, setInputUser] = React.useState<PestoUser>({
     name: 'add user',
     onClick: () => {}, 
     index: 0
   })
+  const [filterString, setFilterString] = React.useState<string>('')
 
   function handleAddUser() {
     Keyboard.dismiss();
@@ -69,9 +70,19 @@ export default function PestoBrowserView(props: any) {
         {/* Users list */}
         <View style={styles.userWrapper}>
           <Text style={styles.sectionTitle}>User List</Text>
+          
+          <TextInput inlineImageLeft='search_icon' 
+            style={styles.input}
+            placeholder="filter ..."
+            value={ filterString }
+            onChangeText={ (name) => {setFilterString(name)} } 
+          />
+          
           <View style={styles.items}>
             {/* This is where the users will go! */}
-            { userRedux.map((item: any, index: number) => {
+            { 
+              userRedux.map((item: any, index: number) => { 
+                if ((filterString != '' &&  item.name.toLocaleUpperCase().replace(filterString.toLocaleUpperCase(),'') != item.name.toLocaleUpperCase() ) || filterString == '')
               return (
                 <TouchableOpacity
                   key={index}>
@@ -115,7 +126,7 @@ export default function PestoBrowserView(props: any) {
           style={styles.input}
           placeholder="add user ..."
           value={inputUser.name}
-          onChangeText={ (newName) => {setUser({ name: newName, index: userRedux?.length || 0, onClick: () => {} })}}
+          onChangeText={ (newName) => {setInputUser({ name: newName, index: userRedux?.length || 0, onClick: () => {} })}}
         />
         <TouchableOpacity onPress={() => handleAddUser()}>
           <View style={styles.addUser}>
