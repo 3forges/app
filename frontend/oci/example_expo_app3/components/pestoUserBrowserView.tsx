@@ -82,7 +82,7 @@ export default function PestoBrowserView(props: any) {
             {/* This is where the users will go! */}
             { 
               userRedux.map((item: any, index: number) => { 
-                if ((filterString != '' &&  item.name.replace(filterString,'') != item.name ) || filterString == '')
+                if ((filterString != '' &&  item.name.toLocaleUpperCase().replace(filterString.toLocaleUpperCase(),'') != item.name.toLocaleUpperCase() ) || filterString == '')
               return (
                 <TouchableOpacity
                   key={index}>
