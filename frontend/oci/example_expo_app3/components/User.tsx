@@ -3,30 +3,20 @@ import { View, Text, StyleSheet, StyleProp, ViewStyle, NativeEventEmitter, Press
 
 export interface PestoUser {
   name: string;
-  picture: string;
   index?: number;
   onClick?: Function;
 }
 
 function User(props: PestoUser) { 
   const [user, setUser] = React.useState<PestoUser>(); 
+  const [page, setPage] = React.useState<string>()
   const  handleOnUserClick = (action: string) => { 
-    console.log('user: '+action)
     props?.onClick?.(action)
   }   
 
   return ( 
     <View style={styles.container}>
       <View style={styles.user}>
-        <Image 
-            style={{
-                resizeMode: 'contain',
-                height: 30,
-                width: 30,
-                top: -1
-            }}
-            source={{uri: props?.picture}}
-        />
         <Text style={styles.text}>{props?.name || "default"}</Text>
       </View>
       <View style={styles.buttons}>
@@ -38,10 +28,9 @@ function User(props: PestoUser) {
                   width: 20,
                   marginRight: 5,
               }}
-              source={require('./assets/edit.png')}
-          />
+              source={require('../assets/edit.png')} />
         </Pressable>
-        <Pressable onPress={() => handleOnUserClick('deleteModal')} >
+        <Pressable onPress={() => handleOnUserClick('showModal')} >
           <Image
               style={{
                   resizeMode: 'contain',
@@ -49,8 +38,7 @@ function User(props: PestoUser) {
                   width: 20,
                   marginRight: 5,
               }}
-              source={require('./assets/delete.png')}
-          />
+              source={require('../assets/delete.png')} />
         </Pressable>
       </View>
      </View>
@@ -91,12 +79,12 @@ const styles = StyleSheet.create({
     flex: 0.9,
   },
   buttons: {
-      alignItems: "flex-end",
-      justifyContent: 'space-between',
-      paddingHorizontal: 10,
-      flexDirection: "row",
-      flex: 0.1,
-      marginHorizontal: 25,
+    alignItems: "flex-end",
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    flexDirection: "row",
+    flex: 0.1,
+    marginHorizontal: 25,
   }
 });
 

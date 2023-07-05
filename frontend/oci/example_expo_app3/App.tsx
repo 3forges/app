@@ -6,34 +6,37 @@ import {
   Text, 
   Pressable, 
 } from "react-native";
-import PestoUserBrowserView from "./pestoUserBrowserView";
-import PestoEditor from "./pestoEditor"
+import PestoUserBrowserView from "./components/pestoUserBrowserView";
+import PestoEditor from "./components/pestoEditor"
+import { Provider } from "react-redux";
+import { store } from "./store";
 
 export default function App() {
   const debug: boolean = true
   const [page, setPage] = React.useState<string>('browser')
 
   function handleClick(action: string) {
-    console.log('app: click '+action)
     if (action == 'editor') setPage('editor')
     if (action == 'back') setPage('browser')
   }
 
   if ( page == "browser")
     return (
-      <View style={styles.container}>
-        {/* Scroll view to enable scrolling when list gets longer than the page */}
-        <StatusBar style="auto" />
-        <PestoUserBrowserView onClick={(action: string) => {handleClick(action)}}></PestoUserBrowserView>
-      </View>
+      <Provider store={store}>
+        <View style={styles.container}>
+          <StatusBar style="auto" />
+          <PestoUserBrowserView onClick={(action: string) => {handleClick(action)}}></PestoUserBrowserView>
+        </View>
+      </Provider>
     );
   if ( page == "editor")
     return (
-      <View style={styles.container}>
-        {/* Scroll view to enable scrolling when list gets longer than the page */}
-        <StatusBar style="auto" />
-        <PestoEditor onClick={(cmd: string) => handleClick(cmd)}></PestoEditor>
-      </View>
+      <Provider store={store}>
+        <View style={styles.container}>
+          <StatusBar style="auto" />
+          <PestoEditor onClick={(cmd: string) => handleClick(cmd)}></PestoEditor>
+        </View>
+      </Provider>
     )
 }
 

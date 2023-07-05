@@ -10,52 +10,38 @@ import {
   Keyboard,
   ScrollView, 
   Modal, 
-  Button, 
   Pressable,
   Image, 
 } from "react-native";
 import User, { PestoUser } from "./User";
+// REDUX
+import { useDispatch, useSelector } from "react-redux";
+import { setUsers } from "../userSlice";
 
-export default function pestoBrowserView(props: any) {
+export default function PestoBrowserView(props: any) {
   const debug: boolean = true
+  // REDUX
+  const userRedux = useSelector((state: any) => state.userRedux.value) // Reading the state
+  const dispatch = useDispatch();
+
+  const [userItems, setUserItems] = React.useState<PestoUser[]>([])
+  const [modalVisible, setModalVisible] = React.useState<boolean[]>([false])
   const [inputUser, setUser] = React.useState<PestoUser>({
     name: 'add user',
-    picture: 'https://randomuser.me/api/portraits/thumb/men/1.jpg', 
     onClick: () => {}, 
     index: 0
   })
-  const [userItems, setUserItems] = React.useState<PestoUser[]>([])
-  const [modalVisible, setModalVisible] = React.useState<boolean[]>([false])
-
-  // Fecth randomuser api
-  function randomUserAsync(arg: string) {   
-    let url = 'https://randomuser.me/api/'
-    //let arg = '?results=1'
-    fetch(url+arg).then(
-      fetchData => fetchData.json().then(
-        fetchData => setUser({
-          name: fetchData.results[0].name.title+' '+fetchData.results[0].name.first+' '+fetchData.results[0].name.last,
-          picture: fetchData.results[0].picture.thumbnail,
-          onClick: () => {},
-          index: userItems.length
-        })
-      )
-    )   
-  }
 
   function handleAddUser() {
     Keyboard.dismiss();
-    let editedUser: PestoUser = { name: inputUser.name, picture: inputUser.picture, index: userItems.length, onClick: () => {} }
-    setUserItems(userItems => [...userItems, editedUser])
+    let editedUser: PestoUser = { name: inputUser.name, index: userItems.length, onClick: () => {} }
+    dispatch(setUsers(editedUser))
     console.log('new user: ', editedUser)
-    modalUpdate(userItems.length, false)
-    randomUserAsync('?results=1')
   }
 
   function handleClick(index: number, action: string) {
-    console.log('click action: '+action+' index: '+index)
     if (action == "delete") deleteUser(index)
-    if (action == "deleteModal") modalUpdate(index, true)
+    if (action == "showModal") modalUpdate(index, true)
     props?.onClick?.(action)
   }
 
@@ -65,18 +51,13 @@ export default function pestoBrowserView(props: any) {
     setModalVisible(visible)
   }
 
-  function updateUser(index: any, reuser: PestoUser) {
-
-  }
-
   function deleteUser(index: number) {
-    let itemsCopy = [...userItems];
+    let itemsCopy = userRedux
     itemsCopy.splice(index, 1);
-    setUserItems(itemsCopy);
+    dispatch(setUsers(itemsCopy))
   }
 
-  if (inputUser.name == 'add user' ) randomUserAsync('?results=1')
-
+  console.log("userRedux : ",userRedux)
   return (
     <View style={styles.container}>
       {/* Scroll view to enable scrolling when list gets longer than the page */}
@@ -90,19 +71,19 @@ export default function pestoBrowserView(props: any) {
           <Text style={styles.sectionTitle}>User List</Text>
           <View style={styles.items}>
             {/* This is where the users will go! */}
-            {userItems.map((item, index) => {
+            { userRedux.map((item: any, index: number) => {
               return (
                 <TouchableOpacity
                   key={index}>
                 <Modal
                     animationType="slide"
                     transparent={true}
-                    visible={modalVisible[index]}
+                    visible={modalVisible[index] || false}
                     onRequestClose={() => {
                         modalUpdate(index, false);
                     }}>
                     <View style={styles.modalView}>
-                        <Text>Voulez vous supprimer l'utilisateur #{index}. {userItems[index].name} ?</Text>
+                        <Text>Voulez vous supprimer l'utilisateur #{index}. {userRedux[index].name} ?</Text>
                         <Pressable onPress={() => {
                             handleClick(index, 'delete')
                             modalUpdate(index, false)
@@ -117,7 +98,6 @@ export default function pestoBrowserView(props: any) {
                 <User
                   name={item.name}
                   index={index}
-                  picture={item.picture}
                   onClick={(action: string) => handleClick(index, action)} />
                 </TouchableOpacity>
               );
@@ -131,20 +111,11 @@ export default function pestoBrowserView(props: any) {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.writeUserWrapper} >
-          <Image 
-            style={{
-                resizeMode: 'contain',
-                height: 40,
-                width: 40,
-                marginRight: 5,
-            }}
-            source={{uri: inputUser.picture }}
-        />
-        <TextInput
+             <TextInput
           style={styles.input}
           placeholder="add user ..."
           value={inputUser.name}
-          onChangeText={ (newName, newPicture=inputUser.picture) => {setUser({ name: newName, picture: newPicture, index: userItems?.length || 0, onClick: () => {} })}}
+          onChangeText={ (newName) => {setUser({ name: newName, index: userRedux?.length || 0, onClick: () => {} })}}
         />
         <TouchableOpacity onPress={() => handleAddUser()}>
           <View style={styles.addUser}>
