@@ -31,6 +31,8 @@ export default function PestoBrowserView(props: any) {
     onClick: () => {}, 
     index: 0
   })
+  
+  // FILTRE
   const [filterString, setFilterString] = React.useState<string>('')
 
   function handleAddUser() {
@@ -80,9 +82,9 @@ export default function PestoBrowserView(props: any) {
           
           <View style={styles.items}>
             {/* This is where the users will go! */}
-            { 
-              userRedux.map((item: any, index: number) => { 
-                if ((filterString != '' &&  item.name.toLocaleUpperCase().replace(filterString.toLocaleUpperCase(),'') != item.name.toLocaleUpperCase() ) || filterString == '')
+            {userRedux.map((item: any, index: number) => { 
+              // FILTRE
+              if ((filterString != '' &&  item.name.toLocaleUpperCase().replace(filterString.toLocaleUpperCase(),'') != item.name.toLocaleUpperCase() ) || filterString == '')
               return (
                 <TouchableOpacity
                   key={index}>
