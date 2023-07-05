@@ -16,7 +16,7 @@ import {
 import User, { PestoUser } from "./User";
 // REDUX
 import { useDispatch, useSelector } from "react-redux";
-import { setUsers } from "../userSlice";
+import { setUsers, dumpUser } from "../userSlice";
 
 export default function PestoBrowserView(props: any) {
   const debug: boolean = true
@@ -24,7 +24,7 @@ export default function PestoBrowserView(props: any) {
   const userRedux = useSelector((state: any) => state.userRedux.value) // Reading the state
   const dispatch = useDispatch();
 
-  const [userItems, setUserItems] = React.useState<PestoUser[]>([])
+  //const [userItems, setUserItems] = React.useState<PestoUser[]>([])
   const [modalVisible, setModalVisible] = React.useState<boolean[]>([false])
   const [inputUser, setInputUser] = React.useState<PestoUser>({
     name: 'add user',
@@ -35,9 +35,8 @@ export default function PestoBrowserView(props: any) {
 
   function handleAddUser() {
     Keyboard.dismiss();
-    let editedUser: PestoUser = { name: inputUser.name, index: userItems.length, onClick: () => {} }
+    let editedUser: PestoUser = { name: inputUser.name, index: userRedux.length, onClick: () => {} }
     dispatch(setUsers(editedUser))
-    console.log('new user: ', editedUser)
   }
 
   function handleClick(index: number, action: string) {
@@ -53,12 +52,11 @@ export default function PestoBrowserView(props: any) {
   }
 
   function deleteUser(index: number) {
-    let itemsCopy = userRedux
+    let itemsCopy = [...userRedux]
     itemsCopy.splice(index, 1);
-    dispatch(setUsers(itemsCopy))
+    dispatch(dumpUser(itemsCopy))
   }
 
-  console.log("userRedux : ",userRedux)
   return (
     <View style={styles.container}>
       {/* Scroll view to enable scrolling when list gets longer than the page */}
@@ -79,10 +77,11 @@ export default function PestoBrowserView(props: any) {
           />
           
           <View style={styles.items}>
-            {/* This is where the users will go! */}
-            { 
-              userRedux.map((item: any, index: number) => { 
-                if ((filterString != '' &&  item.name.toLocaleUpperCase().replace(filterString.toLocaleUpperCase(),'') != item.name.toLocaleUpperCase() ) || filterString == '')
+          {/* This is where the users will go! */}
+          {userRedux.filter((item: any) => {
+            if ((filterString != '' &&  item.name.toLocaleUpperCase().replace(filterString.toLocaleUpperCase(),'') != item.name.toLocaleUpperCase() ) || filterString == '')
+                return true
+            }).map((item: any, index: number) => { 
               return (
                 <TouchableOpacity
                   key={index}>
@@ -96,8 +95,8 @@ export default function PestoBrowserView(props: any) {
                     <View style={styles.modalView}>
                         <Text>Voulez vous supprimer l'utilisateur #{index}. {userRedux[index].name} ?</Text>
                         <Pressable onPress={() => {
-                            handleClick(index, 'delete')
                             modalUpdate(index, false)
+                            handleClick(index, "delete")
                         }}>
                         <Text>oui</Text>
                         </Pressable>

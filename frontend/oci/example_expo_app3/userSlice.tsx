@@ -11,9 +11,12 @@ export const userSlice: any = createSlice({
 		setUsers: (state, item) => {
 			state.value = [...state.value, item.payload];
 		},
+		dumpUser: (state, item) => {
+			state.value = [...item.payload]
+		}
 	}, 
 });
 
 // Action creators are automatically generated for each case reducer function 
-export const { setUsers } = userSlice.actions;
+export const { setUsers, dumpUser } = userSlice.actions;
 export default userSlice.reducer;
