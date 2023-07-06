@@ -12,7 +12,6 @@ const config: ExpoConfig = {
   ios: {
     bundleIdentifier: "com.bioboosterbob.myapp"
   }
-
 };
 
 export default config;

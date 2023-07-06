@@ -61,14 +61,7 @@ export default function PestoBrowserView(props: any) {
   console.log("userRedux : ",userRedux)
   return (
     <View style={styles.container}>
-      {/* Scroll view to enable scrolling when list gets longer than the page */}
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-        }}
-        keyboardShouldPersistTaps="handled">
-        {/* Users list */}
-        <View style={styles.userWrapper}>
+      <View style={styles.userWrapper}>
           <Text style={styles.sectionTitle}>User List</Text>
           
           <TextInput inlineImageLeft='search_icon' 
@@ -77,7 +70,14 @@ export default function PestoBrowserView(props: any) {
             value={ filterString }
             onChangeText={ (name) => {setFilterString(name)} } 
           />
-          
+      </View>
+      {/* Scroll view to enable scrolling when list gets longer than the page */}
+      <View style={styles.scrollview}>
+      <ScrollView 
+        scrollEnabled={true}
+        keyboardShouldPersistTaps="handled" 
+        >
+        {/* Users list */}
           <View style={styles.items}>
             {/* This is where the users will go! */}
             { 
@@ -114,8 +114,8 @@ export default function PestoBrowserView(props: any) {
               );
             })}
           </View>
-        </View>
       </ScrollView>
+      </View>
 
       {/* Add an user */}
       {/* Uses a keyboard avoiding view which ensures the keyboard does not cover the items on screen */}
@@ -139,6 +139,13 @@ export default function PestoBrowserView(props: any) {
 }
 
 const styles = StyleSheet.create({
+  scrollview: {
+    flexGrow: 0.01,
+    height: 250, 
+    //backgroundColor: "pink",
+    marginTop: 10, 
+    borderWidth: 0,
+  }, 
   modalView: {
     margin: 20,
     backgroundColor: 'white',
@@ -167,7 +174,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   items: {
-    marginTop: 30,
+    marginTop: 10,
   },
   writeUserWrapper: {
     position: "absolute",

@@ -9,7 +9,9 @@ export const userSlice: any = createSlice({
 	initialState,
 	reducers: {
 		setUsers: (state, item) => {
-			state.value = [...state.value, item.payload];
+			const copy = [...state.value]
+			copy.splice(0,0,item.payload)
+			state.value = [...copy];
 		},
 	}, 
 });
