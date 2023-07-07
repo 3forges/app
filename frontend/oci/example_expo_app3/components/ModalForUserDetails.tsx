@@ -33,6 +33,7 @@ export default function ModalForUserDetails(props: any) {
   function handleClick(action: string) {
     props?.onClick?.(action)
     if (action=="save") dispatch(addUsers(inputsUser))
+    setInputsUser({ name: '', forname: '', picture: '', age: 0 })
   }
 
     return (
