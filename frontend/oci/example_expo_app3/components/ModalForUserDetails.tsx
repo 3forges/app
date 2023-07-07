@@ -37,16 +37,15 @@ export default function ModalForUserDetails(props: any) {
 
     return (
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={ props.visible }
         onRequestClose={() => {
           handleClick('closeModal');
-        }}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.writeUserWrapper} >
-          <View style={styles.container}>
+        }}
+        style={styles.writeUserWrapper}>
+        <View style={styles.modalView}>
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
             <View style={styles.user}>
               <TextInput
                 key="name"
@@ -76,7 +75,7 @@ export default function ModalForUserDetails(props: any) {
                 accessibilityLabel="Learn more about this purple button"
               />
             </View>
-          </View>
+
         </KeyboardAvoidingView>
 
         <View style={styles.back}>
@@ -84,56 +83,44 @@ export default function ModalForUserDetails(props: any) {
               <Text style={styles.addText}> back </Text>
           </Pressable>
         </View>
+        </View>
     </Modal>
     )
 }
 
 const styles = StyleSheet.create({
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "flex-end",
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
   container: {
     flex: 1,
     backgroundColor: "#E5E5E5",
-  },
-  user: {
-    alignItems: "flex-end",
-    justifyContent: 'flex-start',
     flexDirection: "row",
-    flex: 0.6,
-    marginHorizontal: 25,
-    paddingTop: 80,
-    paddingHorizontal: 120,
-  },
-  userWrapper: {
-    paddingTop: 80,
-    paddingHorizontal: 20,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  items: {
-    marginTop: 30,
+    justifyContent: "center",
+    alignItems: "center",
   },
   writeUserWrapper: {
-    width: "100%",
+    position: "absolute", 
+    top: 100,
+    left: 30,
+    width: "50%",    
     marginLeft: 10,
-    flexDirection: "row",
-    justifyContent: "flex-end",
+    flexDirection: "column", 
+  },
+  modalView: {
+    margin: "15%", 
+    width: "66%",
+    height: 300, 
+    backgroundColor: '#fff',
+    borderColor: '#535353',
     alignItems: "center",
+    borderWidth: 2,
+    borderRadius: 20, 
+  },
+  user: {
+    alignItems: "center",
+    justifyContent: 'flex-start',
+    flexDirection: "column",
+    marginHorizontal: 25,
+    paddingTop: 10,
+    paddingHorizontal: 120,
   },
   input: {
     paddingVertical: 7,
@@ -142,18 +129,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     width: 200,
   },
-  addUser: {
-    width: 60,
-    height: 60,
-    marginHorizontal: 20,
-    backgroundColor: "#FFF",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   addText: {},
   back: {
     position: "absolute",
-    bottom: 60,
+    bottom: 20,
     width: "100%",
     marginLeft: 10,
     flexDirection: "column",

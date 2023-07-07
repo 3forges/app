@@ -81,7 +81,6 @@ export default function PestoBrowserView(props: any) {
             value={ filterString }
             onChangeText={ (name) => {setFilterString(name)} } 
           />
-          <ModalForUserDetails index={modalFUDinfo.index} visible={modalFUDinfo.visible} onClick={ (action: string) => {handleClick(0, action)}}></ModalForUserDetails>
 
           {/* Users list */}
           <View style={styles.items}>
@@ -114,6 +113,7 @@ export default function PestoBrowserView(props: any) {
           <Text style={styles.addText}>+</Text>
         </View>
       </TouchableOpacity>
+      <ModalForUserDetails style={styles.modalUserWrapper} index={modalFUDinfo.index} visible={modalFUDinfo.visible} onClick={ (action: string) => {handleClick(0, action)}}></ModalForUserDetails>
       </View>
     </View>
   );
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   writeUserWrapper: {
-    position: "absolute",
+    position: "relative",
     bottom: 60,
     width: "100%",
     marginLeft: 10,
@@ -159,6 +159,9 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
   },
+  modalUserWrapper: {
+
+  }, 
   input: {
     paddingVertical: 7,
     paddingHorizontal: 15,
