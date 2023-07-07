@@ -61,9 +61,9 @@ export default function ModalForUserDetails(props: any) {
         <View style={styles.modalView}>
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
           <View style={styles.user}>
-            <Text>name: {userRedux[props.info.index].name}</Text>
-            <Text>forname: {userRedux[props.info.index].forname}</Text>
-            <Text>age: {userRedux[props.info.index].age}</Text>
+            <Text style={styles.text}>name: {userRedux[props.info.index].name}</Text>
+            <Text style={styles.text}>forname: {userRedux[props.info.index].forname}</Text>
+            <Text style={styles.text}>age: {userRedux[props.info.index].age}</Text>
             <Button
               onPress={() => setEditable(true)}
               title="Edit"
