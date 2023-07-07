@@ -10,7 +10,7 @@ import User, { PestoUser } from "./User";
 import { useDispatch, useSelector } from "react-redux";
 import { addUsers, dumpUsers } from "../userSlice";
 
-export function ModalForUserDeletion(props: any) {
+export default function ModalForUserDeletion(props: any) {
 	const userRedux = useSelector((state: any) => state.userRedux.value) // Reading the state
 	const dispatch = useDispatch();
 	const index = props.index
@@ -30,7 +30,7 @@ export function ModalForUserDeletion(props: any) {
 		<Modal
 			animationType="slide"
 			transparent={true}
-			visible={ props.visible }
+			visible={ props.visible || false}
 			onRequestClose={() => {
 				handleClick(index, 'closeModal');
 			}}>

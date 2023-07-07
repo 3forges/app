@@ -17,10 +17,11 @@ import { PestoUser } from "./User";
 import { useDispatch, useSelector } from "react-redux";
 import { addUsers } from "../userSlice";
 
-export default function PestoEditor(props: any) {
+export default function ModalForUserDetails(props: any) {
   // const [userItems, setUserItems] = React.useState<PestoUser[]>([])
   const userRedux = useSelector((state: any) => state.userRedux.value) // Reading the state
   const dispatch = useDispatch();
+  const visible = props.visible
 
   const [inputsUser, setInputsUser] = React.useState<PestoUser>({
     name: '',
@@ -29,56 +30,61 @@ export default function PestoEditor(props: any) {
     age: 0,
   })
 
-  function handleClick(action: string, index: number) {
+  function handleClick(action: string) {
+    props?.onClick?.(action)
     if (action=="save") dispatch(addUsers(inputsUser))
-    props?.onClick?.(action, index)
   }
 
     return (
-      <View>
-        <View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={ props.visible }
+        onRequestClose={() => {
+          handleClick('closeModal');
+        }}>
         <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.writeUserWrapper} >
-            <View style={styles.container}>
-              <View style={styles.user}>
-                <TextInput
-                    key="name"
-                    style={styles.input}
-                    placeholder="Nom ..."
-                    value={inputsUser.name}
-                    onChangeText={ (newName) => {setInputsUser({ name: newName, forname: inputsUser.forname, age: inputsUser.age, picture: inputsUser.picture })}}
-                />
-                <TextInput
-                    key="forname"
-                    style={styles.input}
-                    placeholder="Prenom ..."
-                    value={inputsUser.forname}
-                    onChangeText={ (newForName) => {setInputsUser({ name: inputsUser.name, forname: newForName, age: inputsUser.age, picture: inputsUser.picture })}}
-                />
-                <TextInput
-                    key="age"
-                    style={styles.input}
-                    placeholder="age ..."
-                    value={((inputsUser.age!= 0)?''+inputsUser.age:'')}
-                    onChangeText={ (newAge: any) => {setInputsUser({ name: inputsUser.name, forname: inputsUser.forname, age: newAge, picture: inputsUser.picture })}}
-                />
-                <Button
-                  onPress={() => handleClick('save', userRedux.length)}
-                  title="Save"
-                  color="#841584"
-                  accessibilityLabel="Learn more about this purple button"
-                />
-              </View>
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.writeUserWrapper} >
+          <View style={styles.container}>
+            <View style={styles.user}>
+              <TextInput
+                key="name"
+                style={styles.input}
+                placeholder="Nom ..."
+                value={inputsUser.name}
+                onChangeText={ (newName) => {setInputsUser({ name: newName, forname: inputsUser.forname, age: inputsUser.age, picture: inputsUser.picture })}}
+              />
+              <TextInput
+                key="forname"
+                style={styles.input}
+                placeholder="Prenom ..."
+                value={inputsUser.forname}
+                onChangeText={ (newForName) => {setInputsUser({ name: inputsUser.name, forname: newForName, age: inputsUser.age, picture: inputsUser.picture })}}
+              />
+              <TextInput
+                key="age"
+                style={styles.input}
+                placeholder="age ..."
+                value={((inputsUser.age!= 0)?''+inputsUser.age:'')}
+                onChangeText={ (newAge: any) => {setInputsUser({ name: inputsUser.name, forname: inputsUser.forname, age: newAge, picture: inputsUser.picture })}}
+              />
+              <Button
+                onPress={() => handleClick('save')}
+                title="Save"
+                color="#841584"
+                accessibilityLabel="Learn more about this purple button"
+              />
             </View>
-          </KeyboardAvoidingView>
-        </View>
+          </View>
+        </KeyboardAvoidingView>
+
         <View style={styles.back}>
-          <Pressable onPress={() => handleClick('back', 0)}>
+          <Pressable onPress={() => handleClick('back')}>
               <Text style={styles.addText}> back </Text>
           </Pressable>
         </View>
-      </View>
+    </Modal>
     )
 }
 

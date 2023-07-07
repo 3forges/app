@@ -22,7 +22,7 @@ function User(props: PestoUser) {
         <Text style={styles.text}>{props?.name+" "+props?.forname || "default"}</Text>
       </View>
       <View style={styles.buttons}>
-        <Pressable onPress={() => handleOnUserClick('editor')} >
+        <Pressable onPress={() => handleOnUserClick('edit')} >
           <Image
               style={{
                   resizeMode: 'contain',

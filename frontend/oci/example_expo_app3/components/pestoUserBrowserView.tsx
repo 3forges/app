@@ -15,9 +15,15 @@ import {
 } from "react-native";
 import User, { PestoUser } from "./User";
 // REDUX
-import { useDispatch, useSelector } from "react-redux";
-import { addUsers, dumpUsers } from "../userSlice";
-import { ModalForUserDeletion } from "./ModalForDeletion";
+import { useDispatch, useSelector } from "react-redux"
+import { addUsers, dumpUsers } from "../userSlice"
+import ModalForUserDeletion from "./ModalForDeletion"
+import ModalForUserDetails from "./ModalForUserDetails"
+
+interface modalFUDinfos {
+  index: number,
+  visible: boolean, 
+}
 
 export default function PestoBrowserView(props: any) {
   const debug: boolean = true
@@ -30,13 +36,14 @@ export default function PestoBrowserView(props: any) {
   const [modalVisible, setModalVisible] = React.useState<boolean[]>([
     ...userRedux.map(() => { return false })
   ])
-  console.log("modalVisible init: "+modalVisible)
+  const [modalFUDinfo, setModalFUDinfo] = React.useState<modalFUDinfos>({ index:0, visible: false})
   
   function handleAddUser(action: string, index: number) {
     props?.onClick?.(action, index)
   }
 
   function handleClick(index: number, action: string) {
+    if (action == "back" || action == "save") setModalFUDinfo({ index:0, visible: false})
     if (action == "delete") {
       const visible = [...modalVisible]
       visible.splice(index,1)
@@ -46,8 +53,11 @@ export default function PestoBrowserView(props: any) {
     if (action == "showModal") modalUpdate(index, true)  // from User.tsx
     props?.onClick?.(action, index)
   }
-
   
+  function modalReset() {    
+    return [...userRedux.map(() => { return false })]
+  }
+
   function modalUpdate(index: number, bool: boolean) {
     console.log('move modalVisible['+index+'] to '+bool)
     const visible = [...modalVisible]
@@ -71,6 +81,7 @@ export default function PestoBrowserView(props: any) {
             value={ filterString }
             onChangeText={ (name) => {setFilterString(name)} } 
           />
+          <ModalForUserDetails index={modalFUDinfo.index} visible={modalFUDinfo.visible} onClick={ (action: string) => {handleClick(0, action)}}></ModalForUserDetails>
 
           {/* Users list */}
           <View style={styles.items}>
@@ -98,7 +109,7 @@ export default function PestoBrowserView(props: any) {
 
       {/* Add an user Button */}
       <View style={styles.writeUserWrapper}>
-      <TouchableOpacity onPress={() => handleAddUser('addUser', userRedux.length)}>
+      <TouchableOpacity onPress={() => setModalFUDinfo({ index:0, visible: true})}>
         <View style={styles.addUser}>
           <Text style={styles.addText}>+</Text>
         </View>
