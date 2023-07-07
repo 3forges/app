@@ -3,7 +3,9 @@ import { View, Text, StyleSheet, StyleProp, ViewStyle, NativeEventEmitter, Press
 
 export interface PestoUser {
   name: string;
-  index?: number;
+  forname: string,
+  age?: number,
+  picture?: string, 
   onClick?: Function;
 }
 
@@ -17,7 +19,7 @@ function User(props: PestoUser) {
   return ( 
     <View style={styles.container}>
       <View style={styles.user}>
-        <Text style={styles.text}>{props?.name || "default"}</Text>
+        <Text style={styles.text}>{props?.name+" "+props?.forname || "default"}</Text>
       </View>
       <View style={styles.buttons}>
         <Pressable onPress={() => handleOnUserClick('editor')} >

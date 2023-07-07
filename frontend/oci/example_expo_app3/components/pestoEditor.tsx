@@ -14,30 +14,71 @@ import {
   Pressable, 
 } from "react-native";
 import { PestoUser } from "./User";
-
+import { useDispatch, useSelector } from "react-redux";
+import { addUsers } from "../userSlice";
 
 export default function PestoEditor(props: any) {
-  const [userItems, setUserItems] = React.useState<PestoUser[]>([])
+  // const [userItems, setUserItems] = React.useState<PestoUser[]>([])
+  const userRedux = useSelector((state: any) => state.userRedux.value) // Reading the state
+  const dispatch = useDispatch();
 
-  function handleClick() {
-      props?.onClick?.('back')
-    }
+  const [inputsUser, setInputsUser] = React.useState<PestoUser>({
+    name: '',
+    forname: '',
+    picture: '',
+    age: 0,
+  })
+
+  function handleClick(action: string, index: number) {
+    if (action=="save") dispatch(addUsers(inputsUser))
+    props?.onClick?.(action, index)
+  }
 
     return (
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-        }}
-        keyboardShouldPersistTaps="handled">
-        <View style={styles.container}>
-        <View style={styles.userWrapper}>
-        <Text style={styles.addText}> en cour ...</Text>
-        <Pressable onPress={() => handleClick()}>
-            <Text style={styles.addText}> back </Text>
-        </Pressable>
+      <View>
+        <View>
+        <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.writeUserWrapper} >
+            <View style={styles.container}>
+              <View style={styles.user}>
+                <TextInput
+                    key="name"
+                    style={styles.input}
+                    placeholder="Nom ..."
+                    value={inputsUser.name}
+                    onChangeText={ (newName) => {setInputsUser({ name: newName, forname: inputsUser.forname, age: inputsUser.age, picture: inputsUser.picture })}}
+                />
+                <TextInput
+                    key="forname"
+                    style={styles.input}
+                    placeholder="Prenom ..."
+                    value={inputsUser.forname}
+                    onChangeText={ (newForName) => {setInputsUser({ name: inputsUser.name, forname: newForName, age: inputsUser.age, picture: inputsUser.picture })}}
+                />
+                <TextInput
+                    key="age"
+                    style={styles.input}
+                    placeholder="age ..."
+                    value={((inputsUser.age!= 0)?''+inputsUser.age:'')}
+                    onChangeText={ (newAge: any) => {setInputsUser({ name: inputsUser.name, forname: inputsUser.forname, age: newAge, picture: inputsUser.picture })}}
+                />
+                <Button
+                  onPress={() => handleClick('save', userRedux.length)}
+                  title="Save"
+                  color="#841584"
+                  accessibilityLabel="Learn more about this purple button"
+                />
+              </View>
+            </View>
+          </KeyboardAvoidingView>
         </View>
+        <View style={styles.back}>
+          <Pressable onPress={() => handleClick('back', 0)}>
+              <Text style={styles.addText}> back </Text>
+          </Pressable>
         </View>
-      </ScrollView>
+      </View>
     )
 }
 
@@ -61,6 +102,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#E5E5E5",
   },
+  user: {
+    alignItems: "flex-end",
+    justifyContent: 'flex-start',
+    flexDirection: "row",
+    flex: 0.6,
+    marginHorizontal: 25,
+    paddingTop: 80,
+    paddingHorizontal: 120,
+  },
   userWrapper: {
     paddingTop: 80,
     paddingHorizontal: 20,
@@ -73,8 +123,6 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   writeUserWrapper: {
-    position: "absolute",
-    bottom: 60,
     width: "100%",
     marginLeft: 10,
     flexDirection: "row",
@@ -84,6 +132,7 @@ const styles = StyleSheet.create({
   input: {
     paddingVertical: 7,
     paddingHorizontal: 15,
+    marginHorizontal: 15,
     backgroundColor: "#FFF",
     width: 200,
   },
@@ -96,4 +145,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   addText: {},
+  back: {
+    position: "absolute",
+    bottom: 60,
+    width: "100%",
+    marginLeft: 10,
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    alignItems: "center",
+  }
 });

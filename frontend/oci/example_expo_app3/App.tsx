@@ -14,10 +14,16 @@ import { store } from "./store";
 export default function App() {
   const debug: boolean = true
   const [page, setPage] = React.useState<string>('browser')
-
-  function handleClick(action: string) {
-    if (action == 'editor') setPage('editor')
-    if (action == 'back') setPage('browser')
+  let userIndex: any = null
+  function handleClick(action: string, index: number) {
+    //console.log(action, index)
+    
+    if (action == 'editor' || action == 'addUser') {
+      setPage('editor')
+      userIndex = index
+    }
+    if (action == 'back' || action =='save') setPage('browser')
+    
   }
 
   if ( page == "browser")
@@ -25,7 +31,7 @@ export default function App() {
       <Provider store={store}>
         <View style={styles.container}>
           <StatusBar style="auto" />
-          <PestoUserBrowserView onClick={(action: string) => {handleClick(action)}}></PestoUserBrowserView>
+          <PestoUserBrowserView onClick={(action: string, index: number) => {handleClick(action, index)}}></PestoUserBrowserView>
         </View>
       </Provider>
     );
@@ -34,7 +40,7 @@ export default function App() {
       <Provider store={store}>
         <View style={styles.container}>
           <StatusBar style="auto" />
-          <PestoEditor onClick={(cmd: string) => handleClick(cmd)}></PestoEditor>
+          <PestoEditor onClick={(cmd: string, index: number) => handleClick(cmd, index)} userIndex={userIndex}></PestoEditor>
         </View>
       </Provider>
     )
