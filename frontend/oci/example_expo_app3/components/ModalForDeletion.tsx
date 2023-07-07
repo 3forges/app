@@ -6,9 +6,8 @@ import {
   Pressable,
 	StyleSheet, 
 } from "react-native";
-import User, { PestoUser } from "./User";
 import { useDispatch, useSelector } from "react-redux";
-import { addUsers, dumpUsers } from "../userSlice";
+import { dumpUsers } from "../userSlice";
 
 export default function ModalForUserDeletion(props: any) {
 	const userRedux = useSelector((state: any) => state.userRedux.value) // Reading the state
@@ -31,14 +30,12 @@ export default function ModalForUserDeletion(props: any) {
 			animationType="slide"
 			transparent={true}
 			visible={ props.visible || false}
-			onRequestClose={() => {
+			onRequestClose={ () => {
 				handleClick(index, 'closeModal');
 			}}>
 			<View style={styles.modalView}>
 					<Text>Voulez vous supprimer l'utilisateur #{index}. {userRedux[index].name} ?</Text>
-					<Pressable onPress={() => { 
-							handleClick(index, 'delete')
-					}}>
+					<Pressable onPress={() => { handleClick(index, 'delete') }}>
 						<Text>oui</Text>
 					</Pressable>
 					<Pressable onPress={() => handleClick(index, 'closeModal')}>

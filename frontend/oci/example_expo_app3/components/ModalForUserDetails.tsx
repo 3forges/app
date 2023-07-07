@@ -6,41 +6,51 @@ import {
   Text,
   View,
   TextInput,
-  TouchableOpacity,
-  Keyboard,
-  ScrollView, 
   Modal, 
   Button, 
   Pressable, 
 } from "react-native";
 import { PestoUser } from "./User";
 import { useDispatch, useSelector } from "react-redux";
-import { addUsers } from "../userSlice";
+import { addUsers, dumpUsers } from "../userSlice";
 
 export default function ModalForUserDetails(props: any) {
-  // const [userItems, setUserItems] = React.useState<PestoUser[]>([])
   const userRedux = useSelector((state: any) => state.userRedux.value) // Reading the state
   const dispatch = useDispatch();
-  const visible = props.visible
+  
+  /* Travaux */
+  console.log("index :"+props.info.index)
 
-  const [inputsUser, setInputsUser] = React.useState<PestoUser>({
-    name: '',
-    forname: '',
-    picture: '',
-    age: 0,
-  })
+  let defaultUser: PestoUser = { name: '', forname: '', picture: '', age: 0 }
+  if (props.info.index != -1) defaultUser = {...userRedux[props.info.index]}
+  const [inputsUser, setInputsUser] = React.useState<PestoUser>({...defaultUser})
 
+  console.log("defaultUser: ", defaultUser)
+  console.log("inputsUser: ", inputsUser)
+  /* Travaux */
+
+  /**
+   * Gestion de click locaux & remonté parent (pestoUserBrowserView.tsx)
+   *  sauvegarde redux (add|dump) + some reset
+   * @param action 
+   */
   function handleClick(action: string) {
-    props?.onClick?.(action)
-    if (action=="save") dispatch(addUsers(inputsUser))
+    if (action=="save" && props.info.index == -1) dispatch(addUsers(inputsUser))
+    if (action=="save" && props.info.index != -1) {
+      const copy = [...userRedux]
+      copy[props.info.index] = inputsUser
+      dispatch(dumpUsers(copy))
+    }
     setInputsUser({ name: '', forname: '', picture: '', age: 0 })
+    // to parent
+    props?.onClick?.(action)
   }
 
     return (
       <Modal
         animationType="fade"
         transparent={true}
-        visible={ props.visible }
+        visible={ props.info.visible }
         onRequestClose={() => {
           handleClick('closeModal');
         }}
@@ -90,13 +100,6 @@ export default function ModalForUserDetails(props: any) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#E5E5E5",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   writeUserWrapper: {
     position: "absolute", 
     top: 100,

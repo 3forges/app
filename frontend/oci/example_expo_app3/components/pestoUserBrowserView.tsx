@@ -1,22 +1,15 @@
 import React from "react";
 import {
-  Platform,
-  KeyboardAvoidingView,
   StyleSheet,
   Text,
   View,
   TextInput,
   TouchableOpacity,
-  Keyboard,
   ScrollView, 
-  Modal, 
-  Pressable,
-  Image, 
 } from "react-native";
-import User, { PestoUser } from "./User";
+import User from "./User";
 // REDUX
 import { useDispatch, useSelector } from "react-redux"
-import { addUsers, dumpUsers } from "../userSlice"
 import ModalForUserDeletion from "./ModalForDeletion"
 import ModalForUserDetails from "./ModalForUserDetails"
 
@@ -26,43 +19,55 @@ interface modalFUDinfos {
 }
 
 export default function PestoBrowserView(props: any) {
-  const debug: boolean = true
-  // REDUX
+    // REDUX
   const userRedux = useSelector((state: any) => state.userRedux.value) // Reading the state
   const dispatch = useDispatch();
+
   const [filterString, setFilterString] = React.useState<string>('')
 
-  // USER DETAILS
-  const [modalVisible, setModalVisible] = React.useState<boolean[]>([
-    ...userRedux.map(() => { return false })
-  ])
-  const [modalFUDinfo, setModalFUDinfo] = React.useState<modalFUDinfos>({ index:0, visible: false})
+    // un modalDELETEvisible state pour chaque user
+  const [modalDELETEvisible, setModalDELETEvisible] = React.useState<boolean[]>([...userRedux.map(() => { return false })])
+    // modal For User Details state
+  const [modalFUDinfo, setModalFUDinfo] = React.useState<modalFUDinfos>({ index: -1, visible: false})
   
-  function handleAddUser(action: string, index: number) {
-    props?.onClick?.(action, index)
+  /**
+   *  Gestion des pressables locaux & composants fils
+   * 
+   * @param index   reference pour userRedux
+   * @param action  enum (back|save|delete|closeModal|showModal|edit)
+   */
+  function handleClick(index: number, action: string) {
+    //console.log(action, index)      
+    if (action == "back" || action == "save")         // from ModalForUserDetails.tsx
+      setModalFUDinfo({ index: -1, visible: false})
+    
+    if (action == "delete") {                       // from ModalForDeletion.tsx
+      const visible = [...modalDELETEvisible]
+      visible.splice(index,1)
+      setModalDELETEvisible(visible)
+    }
+    
+    if (action == "closeModal")               // from ModalForDeletion.tsx & ModalForUserDetails.tsx
+      modalUpdate(index, false)
+                                            // from User.tsx
+    if (action == "showModal") modalUpdate(index, true)  
+    if (action == "edit") setModalFUDinfo({ index: index, visible: true}) 
   }
 
-  function handleClick(index: number, action: string) {
-    if (action == "back" || action == "save") setModalFUDinfo({ index:0, visible: false})
-    if (action == "delete") {
-      const visible = [...modalVisible]
-      visible.splice(index,1)
-      setModalVisible(visible)
-    }
-    if (action == "closeModal") modalUpdate(index, false)
-    if (action == "showModal") modalUpdate(index, true)  // from User.tsx
-    props?.onClick?.(action, index)
-  }
-  
+  /* return un tableau de false de la taille de UserRedux
   function modalReset() {    
     return [...userRedux.map(() => { return false })]
-  }
+  }*/
 
+  /**
+   * toogle false|true modalDELETEvisible[index]
+   * @param index 
+   * @param bool 
+   */
   function modalUpdate(index: number, bool: boolean) {
-    console.log('move modalVisible['+index+'] to '+bool)
-    const visible = [...modalVisible]
+    const visible = [...modalDELETEvisible]
     visible[index] = bool;
-    setModalVisible(visible)
+    setModalDELETEvisible(visible)
   }
 
   // SOME DEBUG
@@ -71,10 +76,9 @@ export default function PestoBrowserView(props: any) {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={{ flexGrow: 1, }} keyboardShouldPersistTaps="handled">
-        
         <View style={styles.userWrapper}>
           <Text style={styles.sectionTitle}>User List</Text>
-          {/* FILTER */}
+          {/* FILTER INPUT */}
           <TextInput inlineImageLeft='search_icon' 
             style={styles.input}
             placeholder="filter ..."
@@ -88,10 +92,18 @@ export default function PestoBrowserView(props: any) {
                 if ((filterString != '' &&  item.name.toLocaleUpperCase().replace(filterString.toLocaleUpperCase(),'') != item.name.toLocaleUpperCase() ) || filterString == '')
                   return (
                     <TouchableOpacity key={index}>
+                    {/**
+                     * ModalForUserDeletion props: 
+                     *    index (pour infos user dans la modale)
+                     *    visible => useState (rendu on/off)
+                     */}
                     <ModalForUserDeletion 
                       index={index} 
-                      visible={modalVisible[index]}
+                      visible={modalDELETEvisible[index]}
                       onClick={ (index: number, action: string) => { handleClick(index, action) }}></ModalForUserDeletion>                
+                    {/**
+                     * User props: PestoUser
+                     */}
                     <User
                       name={item.name}
                       forname={item.forname}
@@ -106,14 +118,25 @@ export default function PestoBrowserView(props: any) {
         </View>
       </ScrollView>
 
-      {/* Add an user Button */}
+      
       <View style={styles.writeUserWrapper}>
-      <TouchableOpacity onPress={() => setModalFUDinfo({ index:0, visible: true})}>
+      {/* Add an user Button */}
+      <TouchableOpacity onPress={() => setModalFUDinfo({ index: -1, visible: true})}>
         <View style={styles.addUser}>
           <Text style={styles.addText}>+</Text>
         </View>
       </TouchableOpacity>
-      <ModalForUserDetails style={styles.modalUserWrapper} index={modalFUDinfo.index} visible={modalFUDinfo.visible} onClick={ (action: string) => {handleClick(0, action)}}></ModalForUserDetails>
+      {/**
+       * ModalForUserDetails Props:
+       *    info: { index: number, visible: boolean} => useState 
+       *        index: index > -1 pour une edition index = -1 pour un ajout
+       *        visible: (rendu on/off)
+       */}
+      <ModalForUserDetails 
+        style={styles.modalView} 
+        info={modalFUDinfo} 
+        onClick={ (action: string) => {handleClick(0, action)}}>
+      </ModalForUserDetails>
       </View>
     </View>
   );
@@ -159,9 +182,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
   },
-  modalUserWrapper: {
-
-  }, 
   input: {
     paddingVertical: 7,
     paddingHorizontal: 15,
