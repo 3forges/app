@@ -22,18 +22,16 @@ export default function PestoBrowserView(props: any) {
     // REDUX
   const userRedux = useSelector((state: any) => state.userRedux.value) // Reading the state
   const dispatch = useDispatch();
-
   const [filterString, setFilterString] = React.useState<string>('')
-
     // un modalDELETEvisible state pour chaque user
   const [modalDELETEvisible, setModalDELETEvisible] = React.useState<boolean[]>([...userRedux.map(() => { return false })])
     // modal For User Details state
   const [modalFUDinfo, setModalFUDinfo] = React.useState<modalFUDinfos>({ index: -1, visible: false})
   
   /**
-   *  Gestion des pressables locaux & composants fils
+   *  Gestion des pressables locaux & composants fils immediat
    * 
-   * @param index   reference pour userRedux
+   * @param index   reference pour userRedux (-1 ~= null)
    * @param action  enum (back|save|delete|closeModal|showModal|edit)
    */
   function handleClick(index: number, action: string) {
@@ -53,11 +51,6 @@ export default function PestoBrowserView(props: any) {
     if (action == "showModal") modalUpdate(index, true)  
     if (action == "edit") setModalFUDinfo({ index: index, visible: true}) 
   }
-
-  /* return un tableau de false de la taille de UserRedux
-  function modalReset() {    
-    return [...userRedux.map(() => { return false })]
-  }*/
 
   /**
    * toogle false|true modalDELETEvisible[index]
@@ -135,7 +128,7 @@ export default function PestoBrowserView(props: any) {
       <ModalForUserDetails 
         style={styles.modalView} 
         info={modalFUDinfo} 
-        onClick={ (action: string) => {handleClick(0, action)}}>
+        onClick={ (action: string) => {handleClick(-1, action)}}>
       </ModalForUserDetails>
       </View>
     </View>

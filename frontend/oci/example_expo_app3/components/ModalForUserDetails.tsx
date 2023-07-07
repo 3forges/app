@@ -18,14 +18,15 @@ export default function ModalForUserDetails(props: any) {
   const userRedux = useSelector((state: any) => state.userRedux.value) // Reading the state
   const dispatch = useDispatch();
   
+  const [editable, setEditable] = React.useState<Boolean>(false)
+  console.log(editable)
   /* Travaux */
-  console.log("index :"+props.info.index)
-
-  let defaultUser: PestoUser = { name: '', forname: '', picture: '', age: 0 }
-  if (props.info.index != -1) defaultUser = {...userRedux[props.info.index]}
-  const [inputsUser, setInputsUser] = React.useState<PestoUser>({...defaultUser})
+  console.log("index: "+props.info.index)
+  let defaultUser = { name: '', forname: '', picture: '', age: 0 }
+  if (props.info.index != -1) defaultUser = userRedux[props.info.index]
 
   console.log("defaultUser: ", defaultUser)
+  const [inputsUser, setInputsUser] = React.useState<PestoUser>({...defaultUser})
   console.log("inputsUser: ", inputsUser)
   /* Travaux */
 
@@ -42,10 +43,12 @@ export default function ModalForUserDetails(props: any) {
       dispatch(dumpUsers(copy))
     }
     setInputsUser({ name: '', forname: '', picture: '', age: 0 })
+    setEditable(false)
     // to parent
     props?.onClick?.(action)
   }
 
+  if (editable == false && props.info.index != -1) 
     return (
       <Modal
         animationType="fade"
@@ -57,36 +60,17 @@ export default function ModalForUserDetails(props: any) {
         style={styles.writeUserWrapper}>
         <View style={styles.modalView}>
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
-            <View style={styles.user}>
-              <TextInput
-                key="name"
-                style={styles.input}
-                placeholder="Nom ..."
-                value={inputsUser.name}
-                onChangeText={ (newName) => {setInputsUser({ name: newName, forname: inputsUser.forname, age: inputsUser.age, picture: inputsUser.picture })}}
-              />
-              <TextInput
-                key="forname"
-                style={styles.input}
-                placeholder="Prenom ..."
-                value={inputsUser.forname}
-                onChangeText={ (newForName) => {setInputsUser({ name: inputsUser.name, forname: newForName, age: inputsUser.age, picture: inputsUser.picture })}}
-              />
-              <TextInput
-                key="age"
-                style={styles.input}
-                placeholder="age ..."
-                value={((inputsUser.age!= 0)?''+inputsUser.age:'')}
-                onChangeText={ (newAge: any) => {setInputsUser({ name: inputsUser.name, forname: inputsUser.forname, age: newAge, picture: inputsUser.picture })}}
-              />
-              <Button
-                onPress={() => handleClick('save')}
-                title="Save"
-                color="#841584"
-                accessibilityLabel="Learn more about this purple button"
-              />
-            </View>
-
+          <View style={styles.user}>
+            <Text>name: {userRedux[props.info.index].name}</Text>
+            <Text>forname: {userRedux[props.info.index].forname}</Text>
+            <Text>age: {userRedux[props.info.index].age}</Text>
+            <Button
+              onPress={() => setEditable(true)}
+              title="Edit"
+              color="#841584"
+              accessibilityLabel="Learn more about this purple button"
+            />
+          </View>
         </KeyboardAvoidingView>
 
         <View style={styles.back}>
@@ -95,7 +79,58 @@ export default function ModalForUserDetails(props: any) {
           </Pressable>
         </View>
         </View>
-    </Modal>
+      </Modal>
+    )
+  else
+    return (
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={ props.info.visible }
+        onRequestClose={() => {
+          handleClick('closeModal');
+        }}
+        style={styles.writeUserWrapper}>
+        <View style={styles.modalView}>
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
+          <View style={styles.user}>
+            <TextInput
+              key="name"
+              style={styles.input}
+              placeholder="Nom ..."
+              value={inputsUser.name || defaultUser.name}
+              onChangeText={ (newName) => {setInputsUser({ name: newName, forname: inputsUser.forname, age: inputsUser.age, picture: inputsUser.picture })}}
+            />
+            <TextInput
+              key="forname"
+              style={styles.input}
+              placeholder="Prenom ..."
+              value={inputsUser.forname || defaultUser.forname}
+              onChangeText={ (newForName) => {setInputsUser({ name: inputsUser.name, forname: newForName, age: inputsUser.age, picture: inputsUser.picture })}}
+            />
+            <TextInput
+              key="age"
+              style={styles.input}
+              placeholder="age ..."
+              value={((inputsUser.age!= 0)?''+inputsUser.age:((defaultUser.age!=0)?''+defaultUser.age:''))}
+              onChangeText={ (newAge: any) => {setInputsUser({ name: inputsUser.name, forname: inputsUser.forname, age: newAge, picture: inputsUser.picture })}}
+            />
+            <Button
+              onPress={() => handleClick('save')}
+              title="Save"
+              color="#841584"
+              accessibilityLabel="Learn more about this purple button"
+            />
+          </View>
+        </KeyboardAvoidingView>
+
+        <View style={styles.back}>
+          <Pressable onPress={() => handleClick('back')}>
+              <Text style={styles.addText}> back </Text>
+          </Pressable>
+        </View>
+        </View>
+      </Modal>
     )
 }
 
@@ -127,6 +162,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 120,
   },
   input: {
+    paddingVertical: 7,
+    paddingHorizontal: 15,
+    marginHorizontal: 15,
+    backgroundColor: "#FFF",
+    width: 200,
+  },
+  text: {
     paddingVertical: 7,
     paddingHorizontal: 15,
     marginHorizontal: 15,
