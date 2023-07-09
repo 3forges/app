@@ -1,139 +1,136 @@
 import React from "react";
 import {
-  Platform,
-  KeyboardAvoidingView,
   StyleSheet,
   Text,
   View,
   TextInput,
   TouchableOpacity,
-  Keyboard,
   ScrollView, 
-  Modal, 
-  Pressable,
-  Image, 
 } from "react-native";
-import User, { PestoUser } from "./User";
+import User from "./User";
 // REDUX
-import { useDispatch, useSelector } from "react-redux";
-import { setUsers } from "../userSlice";
+import { useDispatch, useSelector } from "react-redux"
+import ModalForUserDeletion from "./ModalForDeletion"
+import ModalForUserDetails from "./ModalForUserDetails"
+
+interface modalFUDinfos {
+  index: number,
+  visible: boolean, 
+}
 
 export default function PestoBrowserView(props: any) {
-  const debug: boolean = true
-  // REDUX
+    // REDUX
   const userRedux = useSelector((state: any) => state.userRedux.value) // Reading the state
   const dispatch = useDispatch();
-
-  const [userItems, setUserItems] = React.useState<PestoUser[]>([])
-  const [modalVisible, setModalVisible] = React.useState<boolean[]>([false])
-  const [inputUser, setInputUser] = React.useState<PestoUser>({
-    name: 'add user',
-    onClick: () => {}, 
-    index: 0
-  })
   const [filterString, setFilterString] = React.useState<string>('')
-
-  function handleAddUser() {
-    Keyboard.dismiss();
-    let editedUser: PestoUser = { name: inputUser.name, index: userItems.length, onClick: () => {} }
-    dispatch(setUsers(editedUser))
-    console.log('new user: ', editedUser)
-  }
-
+    // un modalDELETEvisible state pour chaque user
+  const [modalDELETEvisible, setModalDELETEvisible] = React.useState<boolean[]>([...userRedux.map(() => { return false })])
+    // modal For User Details state
+  const [modalFUDinfo, setModalFUDinfo] = React.useState<modalFUDinfos>({ index: -1, visible: false})
+  
+  /**
+   *  Gestion des pressables locaux & composants fils immediat
+   * 
+   * @param index   reference pour userRedux (-1 ~= null)
+   * @param action  enum (back|save|delete|closeModal|showModal|edit)
+   */
   function handleClick(index: number, action: string) {
-    if (action == "delete") deleteUser(index)
-    if (action == "showModal") modalUpdate(index, true)
-    props?.onClick?.(action)
+    //console.log(action, index)      
+    if (action == "back" || action == "save")         // from ModalForUserDetails.tsx
+      setModalFUDinfo({ index: -1, visible: false})
+    
+    if (action == "delete") {                       // from ModalForDeletion.tsx
+      const visible = [...modalDELETEvisible]
+      visible.splice(index,1)
+      setModalDELETEvisible(visible)
+    }
+    
+    if (action == "closeModal")               // from ModalForDeletion.tsx & ModalForUserDetails.tsx
+      modalUpdate(index, false)
+                                            // from User.tsx
+    if (action == "showModal") modalUpdate(index, true)  
+    if (action == "edit") setModalFUDinfo({ index: index, visible: true}) 
   }
 
+  /**
+   * toogle false|true modalDELETEvisible[index]
+   * @param index 
+   * @param bool 
+   */
   function modalUpdate(index: number, bool: boolean) {
-    const visible = [...modalVisible]
+    const visible = [...modalDELETEvisible]
     visible[index] = bool;
-    setModalVisible(visible)
+    setModalDELETEvisible(visible)
   }
 
-  function deleteUser(index: number) {
-    let itemsCopy = userRedux
-    itemsCopy.splice(index, 1);
-    dispatch(setUsers(itemsCopy))
-  }
-
+  // SOME DEBUG
   console.log("userRedux : ",userRedux)
+
   return (
     <View style={styles.container}>
-      {/* Scroll view to enable scrolling when list gets longer than the page */}
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-        }}
-        keyboardShouldPersistTaps="handled">
-        {/* Users list */}
+      <ScrollView contentContainerStyle={{ flexGrow: 1, }} keyboardShouldPersistTaps="handled">
         <View style={styles.userWrapper}>
           <Text style={styles.sectionTitle}>User List</Text>
-          
+          {/* FILTER INPUT */}
           <TextInput inlineImageLeft='search_icon' 
             style={styles.input}
             placeholder="filter ..."
             value={ filterString }
             onChangeText={ (name) => {setFilterString(name)} } 
           />
-          
+
+          {/* Users list */}
           <View style={styles.items}>
-            {/* This is where the users will go! */}
-            { 
-              userRedux.map((item: any, index: number) => { 
+            { userRedux.map((item: any, index: number) => { 
                 if ((filterString != '' &&  item.name.toLocaleUpperCase().replace(filterString.toLocaleUpperCase(),'') != item.name.toLocaleUpperCase() ) || filterString == '')
-              return (
-                <TouchableOpacity
-                  key={index}>
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={modalVisible[index] || false}
-                    onRequestClose={() => {
-                        modalUpdate(index, false);
-                    }}>
-                    <View style={styles.modalView}>
-                        <Text>Voulez vous supprimer l'utilisateur #{index}. {userRedux[index].name} ?</Text>
-                        <Pressable onPress={() => {
-                            handleClick(index, 'delete')
-                            modalUpdate(index, false)
-                        }}>
-                        <Text>oui</Text>
-                        </Pressable>
-                        <Pressable onPress={() => modalUpdate(index, false)}>
-                            <Text>non</Text>
-                        </Pressable>
-                    </View>
-                </Modal>
-                <User
-                  name={item.name}
-                  index={index}
-                  onClick={(action: string) => handleClick(index, action)} />
-                </TouchableOpacity>
-              );
-            })}
+                  return (
+                    <TouchableOpacity key={index}>
+                    {/**
+                     * ModalForUserDeletion props: 
+                     *    index (pour infos user dans la modale)
+                     *    visible => useState (rendu on/off)
+                     */}
+                    <ModalForUserDeletion 
+                      index={index} 
+                      visible={modalDELETEvisible[index]}
+                      onClick={ (index: number, action: string) => { handleClick(index, action) }}></ModalForUserDeletion>                
+                    {/**
+                     * User props: PestoUser
+                     */}
+                    <User
+                      name={item.name}
+                      forname={item.forname}
+                      age={item.age} 
+                      picture={item.picture}
+                      onClick={(action: string) => handleClick(index, action)} />
+                    </TouchableOpacity>
+                  );
+                })
+              }
           </View>
         </View>
       </ScrollView>
 
-      {/* Add an user */}
-      {/* Uses a keyboard avoiding view which ensures the keyboard does not cover the items on screen */}
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.writeUserWrapper} >
-             <TextInput
-          style={styles.input}
-          placeholder="add user ..."
-          value={inputUser.name}
-          onChangeText={ (newName) => {setInputUser({ name: newName, index: userRedux?.length || 0, onClick: () => {} })}}
-        />
-        <TouchableOpacity onPress={() => handleAddUser()}>
-          <View style={styles.addUser}>
-            <Text style={styles.addText}>+</Text>
-          </View>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+      
+      <View style={styles.writeUserWrapper}>
+      {/* Add an user Button */}
+      <TouchableOpacity onPress={() => setModalFUDinfo({ index: -1, visible: true})}>
+        <View style={styles.addUser}>
+          <Text style={styles.addText}>+</Text>
+        </View>
+      </TouchableOpacity>
+      {/**
+       * ModalForUserDetails Props:
+       *    info: { index: number, visible: boolean} => useState 
+       *        index: index > -1 pour une edition index = -1 pour un ajout
+       *        visible: (rendu on/off)
+       */}
+      <ModalForUserDetails 
+        style={styles.modalView} 
+        info={modalFUDinfo} 
+        onClick={ (action: string) => {handleClick(-1, action)}}>
+      </ModalForUserDetails>
+      </View>
     </View>
   );
 }
@@ -170,7 +167,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   writeUserWrapper: {
-    position: "absolute",
+    position: "relative",
     bottom: 60,
     width: "100%",
     marginLeft: 10,
