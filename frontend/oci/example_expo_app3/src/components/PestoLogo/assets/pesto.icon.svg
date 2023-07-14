@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 1000 1000">
+	<rect fill-opacity="0.6" x="0" y="0" width="1000" height="1000" rx="375" ry="375" fill="#0bfec1"></rect>
+	<g transform="scale(0.83)"><path fill-opacity="1" transform="translate(65, 960) rotate(180) scale(-1, 1)" fill="#e8b254" d="M99 0v700h262c158 0 262 -84 262 -224c0 -151 -126 -229 -275 -229h-170v-247h-79zM178 319h173c116 0 192 62 192 156c0 100 -75 152 -188 152h-177v-308z"></path><path fill-opacity="1" transform="translate(565, 960) rotate(180) scale(-1, 1)" fill="#e8b254" d="M132 227c11 -109 91 -172 182 -172c71 0 121 29 163 73l48 -43c-52 -58 -115 -97 -213 -97c-142 0 -258 109 -258 270c0 150 105 270 248 270c153 0 241 -122 241 -274c0 -7 0 -15 -1 -27h-410zM132 289h333c-9 94 -63 174 -165 174c-89 0 -157 -74 -168 -174z"></path></g>
+</svg>

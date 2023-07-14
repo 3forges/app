@@ -41,7 +41,7 @@ function PestoApp(props: PestoAppProps) {
 
   return ( 
     
-    <PestoDrawer></PestoDrawer>
+    <PestoDrawer theme={pestoTheme}></PestoDrawer>
   );
 }
 
